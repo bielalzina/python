@@ -1,13 +1,12 @@
-from distutils.log import debug
 from flask import Flask, render_template
 app = Flask(__name__)
 
 @app.route('/')
 def index():
-    dades = {'TOMATIGUES':[1,2,3,4,5,6],'MELONS':[3,3,3,4,4,4], 'GINJOLS':[9,9,8,8,7,7]}
-    titolsColumnes = ['','2015','2016','2017','2018','2019','2020']
-    titolsFiles = ['TOMATIGUES','MELONS','GINJOLS']
-    return render_template('template_Taula.html', dades = dades, tFiles = titolsFiles, tColumnes = titolsColumnes)
+    dades={'TOMATIGUES':[1,2,3,4,5,6], 'MELONS':[7,8,9,10,11,12], 'GINJOLS':[13,14,15,16,17,18]}
+    titolsCol=['','2015','2016','2017','2018','2019','2020']
+    titolsFil=['TOMATIGUES', 'MELONS', 'GINJOLS']
+    return render_template('template_taula.html',dades=dades, fil=titolsFil,col=titolsCol)
 
-if __name__=='__main__':
+if __name__ == '__main__':
     app.run(debug=True)

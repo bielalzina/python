@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-
         <!-- Required meta tags -->
         <meta charset="utf-8" />
         <meta
@@ -17,27 +15,27 @@
             integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
             crossorigin="anonymous"
         />
-        <title>UT2 EXEMPLE 4 SESSIONS</title>
+
+        <title>UT2_exemple3_sessions</title>
     </head>
     <body>
         <div class="container">
             <div class="jumbotron">
-                <h1>UT2 EXEMPLE 4 SESSIONS</h1>
+                <h1>UT2_Exemple3_sessions</h1>
                 <p>
-                    PODEM UTILITZAR VARIABLES INTERNES EN PYTHON PER TENIR
-                    "MEMÒRIA" DEL QUE HA ESTAT PASSANT CADA VEGADA QUE L'USUARI
-                    SOL·LICITA LA PAGINA
+                    Podem utilitzar variables internes a Python per tenir
+                    "memòria" del que ha estat passant cada vegada que l'usuari
+                    demana la pàgina
                 </p>
                 <p>
-                    LA VARIABLE LA DEFINIREM COM A UNA SESSIÓ I LA MODIFICAREM A
-                    LA FUNCIÓ QUE S'EXECUTA QUAN L'USUARI FA CLIC EN UN BOTÓ
+                    La variable la definirem com a global i la modificarem a la
+                    funció que s'executa quan l'usuari fa clic a un botó
                 </p>
             </div>
         </div>
-
         {% block content %} {% endblock %}
 
-        <form action="{{url_for('actualitzar')}}" method="get">
+        <form action="{{url_for('actualizar')}}" method="get">
             <button
                 name="operacion"
                 type="submit"
@@ -63,6 +61,7 @@
                 - 2
             </button>
         </form>
+
         <!-- Optional JavaScript -->
         <!-- jQuery first, then Popper.js, then Bootstrap JS -->
         <script
