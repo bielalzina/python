@@ -2,11 +2,12 @@ from flask import Flask, render_template, request, session
 app = Flask(__name__)
 app.config['SECRET_KEY']='mysecretkey'
 totesReserves=[]
+#session['reserves']
 titolsCol=['Dilluns','Dimarts','Dimecres','Dijous','Divendres']
 titolsFil=['15:00','16:00','17:00','18:00','19:00','20:00']
 
 # FUNCIÓ PER CREAR UN ID PER A CADA RESERVA
-# FORMAT PER diaReserva, horaReserva i tipusPista
+# FORMAT PER diaReserva + horaReserva + tipusPista
 # PODREM ORDENAR LES RESERVES I CONTROLAR DUPLICATS MÉS FACILMENT
 def crear_id_reserva(diaReserva,horaReserva,tipusPista):
 
@@ -48,8 +49,10 @@ def crear_reserva(diaReserva,horaReserva,tipusPista,nomPersona,telPersona):
     totesReserves.append(reservaEnCurs)
 
     # ORDENAM totesReserves PER idReserva
-
     totesReserves = sorted(totesReserves, key=lambda k: k['idReserva'])
+
+    # DESAMA EL CONTINGUT DE totesReserves EN VARIABLE SESSIÓ
+    # session['reserves']=totesReserves
 
 
 
@@ -72,6 +75,14 @@ def reservar():
     
     # VARIABLES NECESSARIES
     global totesReserves
+    global titolsCol
+    global titolsFil
+
+    # SI LA VARIABLE DE SESSIÓ TÉ RESERVES ANTERIORS DESADES, PASSAM EL SEU
+    # CONTINGUT A totesReserves
+
+    # if (session['reserves']!=""):
+    #    totesReserves=session['reserves']
 
     # RECUPERAM VALORS DEL FORMAULARI
     diaReserva= request.args.get('dia')
