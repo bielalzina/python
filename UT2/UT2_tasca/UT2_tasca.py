@@ -1,8 +1,8 @@
 from flask import Flask, render_template, request, session
 app = Flask(__name__)
-app.config['SECRET_KEY']='mysecretkey'
+
+app.secret_key = 'mysecretkey'
 totesReserves=[]
-#session['reserves']
 titolsCol=['Dilluns','Dimarts','Dimecres','Dijous','Divendres']
 titolsFil=['15:00','16:00','17:00','18:00','19:00','20:00']
 
@@ -51,8 +51,8 @@ def crear_reserva(diaReserva,horaReserva,tipusPista,nomPersona,telPersona):
     # ORDENAM totesReserves PER idReserva
     totesReserves = sorted(totesReserves, key=lambda k: k['idReserva'])
 
-    # DESAMA EL CONTINGUT DE totesReserves EN VARIABLE SESSIÓ
-    # session['reserves']=totesReserves
+    # DESAM EL CONTINGUT DE totesReserves EN VARIABLE SESSIÓ
+    session['reserves']=totesReserves
 
 
 
@@ -67,7 +67,10 @@ def formulari():
 @app.route('/reserves')
 def reserves():
 
-    return render_template('UT2_exemple4_reserves.html',dadesReserves=totesReserves,columnes=titolsCol,files=titolsFil)
+    return render_template('UT2_exemple4_reserves.html',
+                            dadesReserves=totesReserves,
+                            columnes=titolsCol,
+                            files=titolsFil)
 
 
 @app.route('/reservar')
@@ -81,8 +84,10 @@ def reservar():
     # SI LA VARIABLE DE SESSIÓ TÉ RESERVES ANTERIORS DESADES, PASSAM EL SEU
     # CONTINGUT A totesReserves
 
-    # if (session['reserves']!=""):
-    #    totesReserves=session['reserves']
+    if 'reserves' in session:
+        totesReserves = session['reserves']
+    else:
+        totesReserves=[]
 
     # RECUPERAM VALORS DEL FORMAULARI
     diaReserva= request.args.get('dia')
@@ -117,7 +122,9 @@ def reservar():
         if not totesReserves:
             crear_reserva(diaReserva,horaReserva,tipusPista,nomPersona,telPersona)
             return render_template('UT2_exemple4_reserves.html',
-                                dadesReserves=totesReserves)
+                                    dadesReserves=totesReserves,
+                                    columnes=titolsCol,
+                                    files=titolsFil)
 
         # SI HI HA RESERVES FETES CAL COMPROVAR QUE NO HI HAGI DUPLICITATS
         else:
@@ -144,9 +151,10 @@ def reservar():
             else:
                 # NO EXISTEIX UNA RESERVA AMB AQUESTS VALORS
                 crear_reserva(diaReserva,horaReserva,tipusPista,nomPersona,telPersona)
-                return render_template('UT2_exemple4_reserves.html',dadesReserves=totesReserves,columnes=titolsCol,files=titolsFil)
-
-
+                return render_template('UT2_exemple4_reserves.html',
+                                        dadesReserves=totesReserves,
+                                        columnes=titolsCol,
+                                        files=titolsFil)
 
 
 if __name__ == '__main__':
