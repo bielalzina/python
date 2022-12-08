@@ -1,0 +1,20 @@
+{% extends "template_base.html" %} {% block content %}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>LLIBRE</th>
+            <th>AUTOR</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for l in llibres %}
+        <tr>
+            <td>{{l['TITOL']}}</td>
+            <td>{{l['NOM_AUT']}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}
