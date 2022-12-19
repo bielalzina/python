@@ -80,6 +80,9 @@
                         </div>
                     </div>
                 </div>
+                {% if usuariNoEliminable %}
+                <div class="alert alert-danger" role="alert">{{missatge}}</div>
+                {% endif %}
 
                 <div class="table-responsive">
                     <table

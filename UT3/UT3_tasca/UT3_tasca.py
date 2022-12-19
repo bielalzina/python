@@ -305,12 +305,23 @@ def usuaris():
 def eliminaUsuari():
     # Recuperam idclient
     idclient=request.args.get('idclient')
-    # Executam query eliminacio
-    gimnas.eliminaClient(idclient)
+    # Comprovam si el client te reserves realitzades
+    numReserves=gimnas.tornaNumReservesClient(idclient)
+    if (numReserves['COUNT(idclient)'])==0:
+        # El client no te reserves, es pot eliminar
+        usuariNoEliminable=False
+        missatge=""
+        gimnas.eliminaClient(idclient)
+    else:
+        # El client te reserves, NO es pot eliminar
+        usuariNoEliminable=True
+        missatge="USUARI AMB RESERVES ACTIVES, NO ÉS POSSIBLE ELIMINAR-LO"
     # Obtenim llista de clients
     llistaClients=gimnas.carregaClients()
     return render_template('UT3_tasca_usuaris.html',
-                            llistaClients=llistaClients)
+                            llistaClients=llistaClients,
+                            usuariNoEliminable=usuariNoEliminable,
+                            missatge=missatge)
 
 @app.route('/afegeixUsuari')
 def afegeixUsuari():

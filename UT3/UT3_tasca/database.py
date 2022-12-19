@@ -10,7 +10,7 @@ class gimnas(object):
                             charset='utf8mb4',
                             autocommit=True,
                             cursorclass=pymysql.cursors.DictCursor)
-        
+
         cursor=db.cursor()
         sql="SELECT * FROM clients"
         cursor.execute(sql)
@@ -26,14 +26,14 @@ class gimnas(object):
                             charset='utf8mb4',
                             autocommit=True,
                             cursorclass=pymysql.cursors.DictCursor)
-        
+
         cursor=db.cursor()
         sql="SELECT * FROM pistes"
         cursor.execute(sql)
         ResQuery=cursor.fetchall()
         db.close()
         return ResQuery
-    
+
     def carregaReserves():
         # connexxió a BBDD
         db=pymysql.connect(host='localhost',
@@ -42,14 +42,14 @@ class gimnas(object):
                             charset='utf8mb4',
                             autocommit=True,
                             cursorclass=pymysql.cursors.DictCursor)
-        
+
         cursor=db.cursor()
         sql="SELECT * FROM reserves"
         cursor.execute(sql)
         ResQuery=cursor.fetchall()
         db.close()
         return ResQuery
-    
+
     def afegeixReserva(dataReserva,idPistaReserva,idClientReserva):
         # connexxió a BBDD
         db=pymysql.connect(host='localhost',
@@ -73,7 +73,7 @@ class gimnas(object):
                             charset='utf8mb4',
                             autocommit=True,
                             cursorclass=pymysql.cursors.DictCursor)
-        
+
         cursor=db.cursor()
         sql="SELECT reserves.data,reserves.idpista,reserves.idclient,pistes.tipo,"
         sql=sql+"clients.nom,clients.llinatges FROM reserves"
@@ -87,7 +87,6 @@ class gimnas(object):
         db.close()
         return ResQuery
 
-    
     def carregaClients():
         # connexxió a BBDD
         db=pymysql.connect(host='localhost',
@@ -96,7 +95,7 @@ class gimnas(object):
                             charset='utf8mb4',
                             autocommit=True,
                             cursorclass=pymysql.cursors.DictCursor)
-        
+
         cursor=db.cursor()
         sql="SELECT * FROM clients"
         cursor.execute(sql)
@@ -104,6 +103,22 @@ class gimnas(object):
         db.close()
         return ResQuery
 
+
+    def tornaNumReservesClient(idclient):
+        # connexxió a BBDD
+        db=pymysql.connect(host='localhost',
+                            user='root',
+                            db='gimnas',
+                            charset='utf8mb4',
+                            autocommit=True,
+                            cursorclass=pymysql.cursors.DictCursor)
+
+        cursor=db.cursor()
+        sql="SELECT COUNT(idclient) FROM reserves WHERE idclient="+str(idclient)+";"
+        cursor.execute(sql)
+        num=cursor.fetchone()
+        db.close()
+        return num
 
     def eliminaClient(idclient):
         # connexxió a BBDD
@@ -113,12 +128,12 @@ class gimnas(object):
                             charset='utf8mb4',
                             autocommit=True,
                             cursorclass=pymysql.cursors.DictCursor)
-        
+
         cursor=db.cursor()
         sql="DELETE FROM clients WHERE idclient="+str(idclient)+";"
         cursor.execute(sql)
         db.close()
-        
+
     def tornaMaximIdclient():
         # connexxió a BBDD
         db=pymysql.connect(host='localhost',
@@ -127,7 +142,7 @@ class gimnas(object):
                             charset='utf8mb4',
                             autocommit=True,
                             cursorclass=pymysql.cursors.DictCursor)
-        
+
         cursor=db.cursor()
         sql="SELECT MAX(idclient) maxId FROM clients;"
         cursor.execute(sql)
@@ -143,7 +158,7 @@ class gimnas(object):
                             charset='utf8mb4',
                             autocommit=True,
                             cursorclass=pymysql.cursors.DictCursor)
-        
+
         cursor=db.cursor()
         sql="INSERT INTO clients (idclient,nom,llinatges,telefon)"
         sql=sql+" VALUES ("+str(idclient)+",'"+nom+"','"+llinatges+"','"+telefon+"');"
