@@ -81,6 +81,55 @@ def tornaValorsTaula(reservesSetmana,dataDilluns):
 def index():
     return render_template('index.html') 
 
+@app.route('/formlogin')
+def formlogin():
+    return render_template('UT4_login.html')
+
+@app.route('/login', methods = ['GET','POST'])
+def login():
+    # Obtenim dades del formulari
+    nomUsuari=request.form['usuari']
+    password=request.form['password']
+    #print(nomUsuari)
+    #print(password)
+    
+    # Instaciam la CLASSE User
+    user=User()
+    #print(user)
+    #print(user.nomUsuari)
+    
+    # Definim l'atribut nomUsuari de l'objecte user
+    user.set_nomUsuari(nomUsuari)
+    #print(user.nomUsuari)
+
+    if user.comprovaPassword(password):
+        # TRUE, password -> OK
+        # Obtenim dades de l'usuari en funció del nom usuari
+        user.obtenirDadesUsuariSegonsNomUsuari()
+        # Carregam usuari en login_manager
+        login_user(user)
+
+        return redirect(url_for('dashboard'))
+
+    else:
+        # FALSE, password -> KO
+        return render_template('UT4_login.html', 
+                               loginMissatge="Les dades que has indicat per \
+                                   iniciar sessió no són correctes. Torna a \
+                                    intentar-ho.")
+
+@app.route('/dashboard')
+@login_required
+def dashboard():
+    return render_template('UT4_dashboard.html')
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return render_template('index.html')
+
+"""
 @app.route('/login', methods=['GET','POST'])
 def login():
     if request.method == 'POST':
@@ -89,29 +138,34 @@ def login():
         password=request.form['password']
         #print(nomUsuari)
         #print(password)
-        
         # Instaciam la CLASSE User
         user=User()
         #print(user.nomUsuari)
-        
+
         # Definim l'atribut nomUsuari de l'objecte user
         user.nomUsuari=nomUsuari
         #print(user.nomUsuari)
-        
+
         # Comprovam password
-        print(user.comprovaPassword(password))
+        # print(user.comprovaPassword(password))
         if user.comprovaPassword(password):
             # TRUE, password -> OK
             # Definim els atributs id, email, rol de l'objecte user
             user.obtenirDadesUsuariSegonsNomUsuari()
-            
+            print(user.id)
+
             # Carregam usuari en login_manager
             login_user(user)
-            
-            return render_template('UT4_login.html') 
-        
+
+            return render_template('UT4_login.html')
+
+        else:
+            return render_template('UT4_login.html')
+
     else:
         return render_template('UT4_login.html') 
+"""
+
 
 @app.route('/nouUsuariRegistre', methods=['GET','POST'])
 def nou_usuari_registre():
@@ -123,6 +177,7 @@ def nou_usuari_registre():
     if form.validate_on_submit():
 
         # Desam els valors en variables de sessió
+        """
         session['username']=form.username.data 
         session['nom']=form.nom.data 
         session['llinatges']=form.llinatges.data 
@@ -132,7 +187,8 @@ def nou_usuari_registre():
         print(type(form.dataAlta.data))
         session['dataAlta']=form.dataAlta.data
         session['email']=form.email.data
-        session['telefon']=form.telefon.data
+        session['telefon']=form.telefon.data 
+        """
 
         # Redirigim a resultats.html
         return redirect(url_for('resultat'))

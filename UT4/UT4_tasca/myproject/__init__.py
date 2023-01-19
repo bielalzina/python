@@ -15,5 +15,5 @@ app.config['SECRET_KEY']='averysecretkey'
 login_manager.init_app(app)
 
 # Els usuaris no logats només poden accedir al template per fer LOGIN
-login_manager.login_view="login"
+login_manager.login_view="formlogin"
 

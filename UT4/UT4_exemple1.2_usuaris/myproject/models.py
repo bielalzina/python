@@ -14,7 +14,9 @@ import pymysql.cursors
 # i agafa el seu identificador.
 @login_manager.user_loader
 def load_user(user_id):
+    print("LOAD_USER")
     if user_id:
+        print("USER_ID")
         # Instanciam la classe User(Mixin)
         userLM=User()
         userLM.obtenirDadesUserLM(user_id)

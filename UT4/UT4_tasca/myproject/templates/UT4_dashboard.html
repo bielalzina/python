@@ -22,70 +22,36 @@
         <br />
         <div class="container">
             <div class="row">
-                <div class="col-9 alert alert-primary" role="alert">
+                <div class="col-12 alert alert-primary" role="alert">
                     <h1>Tasca DWES4 - USUARIS i FORMULARIS</h1>
                 </div>
             </div>
         </div>
-        <br />
         <div class="container">
             <div class="row">
-                <div class="col-6 alert alert-dark" role="alert">
-                    <form
-                        method="POST"
-                        class="navbar-form navbar-right"
-                        role="form"
-                        action="{{ url_for('login') }}"
-                    >
-                        <br />
-                        <h1 class="h3 mb-3 fw-normal">INICIA SESSIÓ</h1>
-
-                        <input
-                            type="text"
-                            name="usuari"
-                            class="form-control"
-                            id="usuari"
-                            placeholder="USUARI"
+                <div class="col-12 alert alert-info" role="alert">
+                    <h2>
+                        <img
+                            src="../static/user.svg"
+                            class="img-thumbnail"
+                            alt="usuari"
                         />
-
-                        <br />
-                        <input
-                            type="password"
-                            class="form-control"
-                            id="password"
-                            name="password"
-                            placeholder="PASSWORD"
-                        />
-
-                        <br />
-                        <p>
-                            <button class="btn btn-success" type="submit">
-                                ENTRA
-                            </button>
-                        </p>
-                    </form>
-                    {% if loginMissatge %}
-                    <div class="alert alert-warning" role="alert">
-                        <h3><strong>{{loginMissatge}}</strong></h3>
-                    </div>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-        <div class="container">
-            <div class="row">
-                <div class="col-6">
+                        <strong
+                            >{{current_user.nom}}&nbsp;{{current_user.llinatges}}</strong
+                        >
+                    </h2>
                     <p>
                         <a
-                            class="btn btn-primary"
-                            href="{{ url_for('nou_usuari_registre') }}"
+                            class="btn btn-danger btn-lg"
+                            href="{{ url_for('logout') }}"
                             role="button"
-                            >NOU USUARI</a
+                            >SURT DE LA SESSIÓ</a
                         >
                     </p>
                 </div>
             </div>
         </div>
+        <br />
 
         <!-- Optional JavaScript -->
         <!-- jQuery first, then Popper.js, then Bootstrap JS -->

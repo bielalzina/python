@@ -15,10 +15,19 @@ import pymysql.cursors
 
 @login_manager.user_loader
 def load_user(user_id):
+    #print("EN EXECUCIÓ - load_user")
     if user_id:
         userLM=User()
         userLM.obtenirDadesUserLM(user_id)
-        print(userLM.password)
+        print('DADES userLM')
+        print(userLM.id)
+        print(userLM.nomUsuari)
+        #print(userLM.nom)
+        #print(userLM.llinatges)
+        #print(userLM.password)
+        #print(userLM.data_alta)
+        #print(userLM.email)
+        #print(userLM.telefon)
         return userLM
 
 # Cream CLASSE User
@@ -34,7 +43,7 @@ class User(UserMixin):
         self.nomUsuari = usuari
     
     def comprovaPassword(self, password):
-        print("EN EXECUCIÓ")
+        #print("EN EXECUCIÓ - comprova password")
         # CONNEXIO A BBDD
         db=pymysql.connect(host='localhost',
                             user='root',
@@ -60,6 +69,7 @@ class User(UserMixin):
         return resposta
     
     def obtenirDadesUsuariSegonsNomUsuari(self):
+        #print("EN EXECUCIÓ - obtenirDadesUsuariSegonsNomUsuari")
         # CONNEXIO A BBDD
         db=pymysql.connect(host='localhost',
                             user='root',
@@ -72,20 +82,12 @@ class User(UserMixin):
         cursor.execute(sql)
         resultatConsulta=cursor.fetchone()
         if resultatConsulta:
-            self.id=resultatConsulta['idusuari']
-            self.nomUsuari=resultatConsulta['username']
-            self.nom=resultatConsulta['nom']
-            self.llinatges=resultatConsulta['llinatges']
-            self.password=resultatConsulta['password']
-            self.data_alta=resultatConsulta['data_alta']
-            self.email=resultatConsulta['email']
-            self.telefon=resultatConsulta['telefon']
-            
+            self.id=resultatConsulta['id']
         db.close() 
     
     
     def obtenirDadesUserLM(self,userid):
-        print("EXECUCIO QUERY")
+        #print("EXECUCIO obtenirDadesUserLM")
         # CONNEXIO A BBDD
         db=pymysql.connect(host='localhost',
                             user='root',
@@ -94,11 +96,11 @@ class User(UserMixin):
                             autocommit=True,
                             cursorclass=pymysql.cursors.DictCursor)
         cursor=db.cursor()
-        sql = "SELECT * FROM usuaris WHERE idusuari="+str(userid)
+        sql = "SELECT * FROM usuaris WHERE id="+str(userid)
         cursor.execute(sql)
         resultatConsulta=cursor.fetchone()
         if resultatConsulta:
-            self.id=resultatConsulta['idusuari']
+            self.id=resultatConsulta['id']
             self.nomUsuari=resultatConsulta['username']
             self.nom=resultatConsulta['nom']
             self.llinatges=resultatConsulta['llinatges']
@@ -106,37 +108,9 @@ class User(UserMixin):
             self.data_alta=resultatConsulta['data_alta']
             self.email=resultatConsulta['email']
             self.telefon=resultatConsulta['telefon']
-            print(self.password)
-        else:
-            print("NO VA BE")
-            
         db.close()
     
 
-""" 
-    def fromID(self,user_id):
-        # connexxió a BBDD
-        db=pymysql.connect(host='localhost',
-                            user='root',
-                            db='gimnas',
-                            charset='utf8mb4',
-                            autocommit=True,
-                            cursorclass=pymysql.cursors.DictCursor)
-        cursor=db.cursor()
-        sql = "SELECT idusuari, username, nom, llinatges, data_alta, email, \
-            telefon FROM usuaris WHERE idusuari="+str(user_id)
-        cursor.execute(sql)
-        ResQuery = cursor.fetchone()
-        if ResQuery:
-            self.idusuari = ResQuery['idusuari']
-            self.username = ResQuery['username']
-            self.nom = ResQuery['nom']
-            self.llinatges = ResQuery['llinatges']
-            self.data_alta = ResQuery['data_alta']
-            self.email = ResQuery['email']
-            self.telefon = ResQuery['telefon']
-
- """
 
 
 
