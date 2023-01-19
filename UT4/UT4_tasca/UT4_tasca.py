@@ -110,8 +110,8 @@ def login():
             
             return render_template('UT4_login.html') 
         
-        else:
-            return render_template('UT4_login.html') 
+    else:
+        return render_template('UT4_login.html') 
 
 @app.route('/nouUsuariRegistre', methods=['GET','POST'])
 def nou_usuari_registre():

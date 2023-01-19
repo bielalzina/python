@@ -34,6 +34,7 @@ class User(UserMixin):
         self.nomUsuari = usuari
     
     def comprovaPassword(self, password):
+        print("EN EXECUCIÓ")
         # CONNEXIO A BBDD
         db=pymysql.connect(host='localhost',
                             user='root',
