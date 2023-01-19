@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- Bootstrap CSS -->
+        <link
+            rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+            integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
+            crossorigin="anonymous"
+        />
+        <title>FORM</title>
+    </head>
+    <body>
+        <div class="container">
+            <div class="jumbotron">
+                <h1>VALIDA EL TEU USUARI</h1>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="col-md-6">
+                <form
+                    method="POST"
+                    class="navbar-form navbar-right"
+                    role="form"
+                >
+                    {# Aquest CAMP OCULT és una funció de seguretat CSRF. #} {{
+                    form.hidden_tag() }} {{form.nomUsuari.label}}
+                    {{form.nomUsuari(class_="form-control")}}
+                    <br />
+                    {% for error in form.nomUsuari.errors %}
+                    <div class="alert alert-danger" role="alert">
+                        {{ error }}
+                    </div>
+
+                    {%endfor%}
+                    <br />
+
+                    <br />
+                    {{form.btnEnviar(class_="btn btn-success")}}
+                </form>
+            </div>
+        </div>
+    </body>
+</html>

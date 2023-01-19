@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- Bootstrap CSS -->
+        <link
+            rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+            integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
+            crossorigin="anonymous"
+        />
+        <title>RESULTATS</title>
+    </head>
+    <body>
+        <div class="container">
+            <div class="jumbotron">
+                <h1>NOU USUARI</h1>
+            </div>
+        </div>
+        <div class="container">
+            <div class="col-md-12">
+                <div class="alert alert-primary" role="alert">
+                    <h3>
+                        NOM D'USUARI: <strong>{{session['username']}}</strong>
+                    </h3>
+                    <h3>NOM: <strong>{{session['nom']}}</strong></h3>
+                    <h3>
+                        LLINATGES: <strong>{{session['llinatges']}}</strong>
+                    </h3>
+                    <h3>
+                        PASSWORD 1: <strong>{{session['password']}}</strong>
+                    </h3>
+                    <h3>
+                        PASSWORD 2:
+                        <strong>{{session['confirm_password']}}</strong>
+                    </h3>
+                    <h3>
+                        DATA D'ALTA:
+                        <strong>{{session['dataAlta']}}</strong>
+                    </h3>
+                    <h3>
+                        E-MAIL:
+                        <strong>{{session['email']}}</strong>
+                    </h3>
+                    <h3>
+                        TELEFON:
+                        <strong>{{session['telefon']}}</strong>
+                    </h3>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

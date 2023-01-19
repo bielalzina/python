@@ -1,0 +1,79 @@
+{% extends "main.html" %} {% block content %}
+<br />
+<div class="container">
+    {% if current_user.rol=="admin" %}
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading alert alert-warning" role="alert">
+                <h3 class="panel-title">AFEGIR NOU USUARI</h3>
+            </div>
+            <br />
+            <div class="panel-body">
+                <form
+                    name="registre"
+                    class="navbar-form navbar-right"
+                    role="form"
+                    action="{{ url_for('register') }}"
+                    method="get"
+                >
+                    <div class="form-group">
+                        <label for="usuari" class="form-label">USUARI:</label>
+                        <input
+                            type="text"
+                            placeholder="Usuari"
+                            class="form-control"
+                            id="nom"
+                            name="nom"
+                            required
+                        />
+                    </div>
+                    <div class="form-group">
+                        <label for="password" class="form-label"
+                            >PASSWORD:</label
+                        >
+                        <input
+                            type="password"
+                            placeholder="Password"
+                            class="form-control"
+                            id="password"
+                            name="password"
+                            required
+                        />
+                    </div>
+                    <div class="form-group">
+                        <label for="email" class="form-label">EMAIL:</label>
+                        <input
+                            type="email"
+                            placeholder="@ EMAIL"
+                            class="form-control"
+                            id="email"
+                            name="email"
+                            required
+                        />
+                    </div>
+                    <p>
+                        <input
+                            class="btn btn-danger btn-lg"
+                            type="submit"
+                            value="AFEGIR"
+                            name="AFEGIR"
+                        />&nbsp;
+                        <a
+                            class="btn btn-danger btn-lg"
+                            href="{{ url_for('welcome_user') }}"
+                            role="button"
+                            >CANCELAR</a
+                        >
+                    </p>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="alert alert-warning" role="alert">
+        <h3><strong>NOMÉS L'ADMINISTRADOR POT AFEGIR NOUS USUARIS</strong></h3>
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}

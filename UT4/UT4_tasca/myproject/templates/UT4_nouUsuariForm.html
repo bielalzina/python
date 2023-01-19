@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, shrink-to-fit=no"
+        />
+
+        <!-- Bootstrap CSS -->
+        <link
+            rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+            integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
+            crossorigin="anonymous"
+        />
+
+        <title>Tasca DWES4</title>
+    </head>
+    <body>
+        <br />
+        <div class="container">
+            <div class="row">
+                <div class="col-9 alert alert-primary" role="alert">
+                    <h1>Tasca DWES4 - USUARIS i FORMULARIS</h1>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-9 alert alert-info" role="alert">
+                    <h1>ALTA NOU USUARI</h1>
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="container">
+            <div class="row">
+                <div class="col-9 alert alert-dark" role="alert">
+                    {% for field, errors in form.errors.items() %}
+                    <div class="alert alert-danger" role="alert">
+                        {{ ', '.join(errors) }}
+                    </div>
+                    {% endfor %}
+
+                    <form
+                        method="POST"
+                        class="navbar-form navbar-right"
+                        role="form"
+                    >
+                        {# Aquest CAMP OCULT és una funció de seguretat CSRF. #}
+                        {{ form.hidden_tag() }}
+                        <br />{{form.username.label}}
+                        {{form.username(class_="form-control")}}
+                        <br />{{form.nom.label}}
+                        {{form.nom(class_="form-control")}}
+                        <br />{{form.llinatges.label}}
+                        {{form.llinatges(class_="form-control")}}
+                        <br />{{form.password.label}}
+                        {{form.password(class_="form-control")}}
+                        <br />{{form.confirm_password.label}}
+                        {{form.confirm_password(class_="form-control")}}
+                        <br />{{form.dataAlta.label}}
+                        {{form.dataAlta(class_="form-control")}}
+                        <br />{{form.email.label}}
+                        {{form.email(class_="form-control")}}
+                        <br />{{form.telefon.label}}
+                        {{form.telefon(class_="form-control")}}
+
+                        <br />
+                        {{form.btnEnviar(class_="btn btn-success")}}
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Optional JavaScript -->
+        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        <script
+            src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+            integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+            crossorigin="anonymous"
+        ></script>
+        <script
+            src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+            integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+            crossorigin="anonymous"
+        ></script>
+        <script
+            src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+            integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+            crossorigin="anonymous"
+        ></script>
+    </body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, shrink-to-fit=no"
+        />
+
+        <!-- Bootstrap CSS -->
+        <link
+            rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+            integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
+            crossorigin="anonymous"
+        />
+        <title>UT4 EXEMPLE-1 GESTIÓ D'USUARIS</title>
+    </head>
+    <body>
+        <div class="container">
+            <div class="jumbotron">
+                <h1>UT4 EXEMPLE-1 GESTIÓ D'USUARIS</h1>
+                <h2>AUTENTICACIÓ I MODIFICACIÓ D'USUARIS AMB MYSQL</h2>
+                <br />
+                <div class="alert alert-success" role="alert">
+                    <h3>
+                        BENVINGUT <strong>{{current_user.username}}</strong>
+                    </h3>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading alert alert-info" role="alert">
+                        <h3 class="panel-title">GESTIÓ D'USUARIS</h3>
+                    </div>
+                    <br />
+                    <div class="panel-body">
+                        <p>
+                            <a
+                                class="btn btn-primary btn-lg"
+                                href="{{ url_for('modify_form') }}"
+                                role="button"
+                                >MODIFICAR USUARI</a
+                            >
+                        </p>
+                        {% if current_user.rol=="admin" %}
+                        <p>
+                            <a
+                                class="btn btn-primary btn-lg"
+                                href="{{ url_for('register_form') }}"
+                                role="button"
+                                >AFEGIR USUARI</a
+                            >
+                        </p>
+                        {% endif %}
+                        <p>
+                            <a
+                                class="btn btn-danger btn-lg"
+                                href="{{ url_for('logout') }}"
+                                role="button"
+                                >SORTIR</a
+                            >
+                        </p>
+                    </div>
+                </div>
+            </div>
+            {% block content %} {% endblock %}
+        </div>
+    </body>
+</html>

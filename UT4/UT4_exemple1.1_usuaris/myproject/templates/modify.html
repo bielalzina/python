@@ -1,0 +1,64 @@
+{% extends "main.html" %} {% block content %}
+<br />
+<div class="container">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading alert alert-warning" role="alert">
+                <h3 class="panel-title">MODIFICAR USUARI</h3>
+            </div>
+            <br />
+            <div class="panel-body">
+                <div class="alert alert-primary" role="alert">
+                    <h4>
+                        USERNAME: <strong>{{current_user.username}}</strong>
+                    </h4>
+                </div>
+                <form
+                    name="modificacio"
+                    class="navbar-form navbar-right"
+                    role="form"
+                    action="{{ url_for('modify') }}"
+                    method="get"
+                >
+                    <div class="form-group">
+                        <label for="password" class="form-label"
+                            >PASSWORD:</label
+                        >
+                        <input
+                            type="password"
+                            class="form-control"
+                            id="password"
+                            name="password"
+                        />
+                    </div>
+                    <div class="form-group">
+                        <label for="email" class="form-label">EMAIL:</label>
+                        <input
+                            type="email"
+                            placeholder="{{current_user.email}}"
+                            class="form-control"
+                            id="email"
+                            name="email"
+                        />
+                    </div>
+                    <p>
+                        <input
+                            class="btn btn-danger btn-lg"
+                            type="submit"
+                            value="MODIFICAR"
+                            name="MODIFICAR"
+                        />&nbsp;
+                        <a
+                            class="btn btn-danger btn-lg"
+                            href="{{ url_for('welcome_user') }}"
+                            role="button"
+                            >CANCELAR</a
+                        >
+                    </p>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, shrink-to-fit=no"
+        />
+
+        <!-- Bootstrap CSS -->
+        <link
+            rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+            integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
+            crossorigin="anonymous"
+        />
+        <title>UT4 EXEMPLE-1 GESTIÓ D'USUARIS</title>
+    </head>
+    <body>
+        <div class="container">
+            <div class="jumbotron">
+                <h1>UT4 EXEMPLE-1 GESTIÓ D'USUARIS</h1>
+                <h2>AUTENTICACIÓ I MODIFICACIÓ D'USUARIS AMB MYSQL</h2>
+            </div>
+        </div>
+        <div class="container">
+            <div class="col-md-6">
+                {% if loginMissatge %}
+                <div class="alert alert-warning" role="alert">
+                    <h3><strong>{{loginMissatge}}</strong></h3>
+                </div>
+                {% endif %}
+                <form
+                    class="navbar-form navbar-right"
+                    role="form"
+                    action="{{ url_for('login') }}"
+                    method="post"
+                >
+                    <div class="form-group">
+                        <label for="usuari" class="form-label">USUARI:</label>
+                        <input
+                            type="text"
+                            placeholder="Usuari"
+                            class="form-control"
+                            id="usuari"
+                            name="usuari"
+                            size="15"
+                        />
+                    </div>
+                    <div class="form-group">
+                        <label for="password" class="form-label"
+                            >PASSWORD:</label
+                        >
+                        <input
+                            type="password"
+                            placeholder="Password"
+                            class="form-control"
+                            id="password"
+                            name="password"
+                            size="15"
+                        />
+                    </div>
+                    <button type="submit" class="btn btn-success">LOGIN</button>
+                </form>
+            </div>
+        </div>
+    </body>
+</html>
