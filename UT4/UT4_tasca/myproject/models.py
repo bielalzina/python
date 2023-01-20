@@ -82,7 +82,7 @@ class User(UserMixin):
         cursor.execute(sql)
         resultatConsulta=cursor.fetchone()
         if resultatConsulta:
-            self.id=resultatConsulta['id']
+            self.id=resultatConsulta['idusuari']
         db.close() 
     
     
@@ -96,11 +96,11 @@ class User(UserMixin):
                             autocommit=True,
                             cursorclass=pymysql.cursors.DictCursor)
         cursor=db.cursor()
-        sql = "SELECT * FROM usuaris WHERE id="+str(userid)
+        sql = "SELECT * FROM usuaris WHERE idusuari="+str(userid)
         cursor.execute(sql)
         resultatConsulta=cursor.fetchone()
         if resultatConsulta:
-            self.id=resultatConsulta['id']
+            self.id=resultatConsulta['idusuari']
             self.nomUsuari=resultatConsulta['username']
             self.nom=resultatConsulta['nom']
             self.llinatges=resultatConsulta['llinatges']
@@ -109,6 +109,82 @@ class User(UserMixin):
             self.email=resultatConsulta['email']
             self.telefon=resultatConsulta['telefon']
         db.close()
+
+    def obtenirDarrerIdClient(self):
+        # connexxió a BBDD
+        db=pymysql.connect(host='localhost',
+                            user='root',
+                            db='gimnas',
+                            charset='utf8mb4',
+                            autocommit=True,
+                            cursorclass=pymysql.cursors.DictCursor)
+
+        cursor=db.cursor()
+        sql="SELECT MAX(idclient) maxId FROM clients;"
+        cursor.execute(sql)
+        darrerID=cursor.fetchone()
+        db.close()
+        return darrerID
+    
+      
+        
+        
+
+    def altaUsuari(self,username,nom,llinatges,password,dataAlta,email,telefon):
+        # CONNEXIO A BBDD
+        db=pymysql.connect(host='localhost',
+                            user='root',
+                            db='gimnas',
+                            charset='utf8mb4',
+                            autocommit=True,
+                            cursorclass=pymysql.cursors.DictCursor)
+        cursor=db.cursor()
+        
+        # Perque la TASCA DWES3 pugui seguir funcionant, en el mateix moment que
+        # inserim un nou usuari en taula usuaris, també ho farem en la taula clients
+        # fent que ambdos IDs coincideixin (idclient=idusuari)
+        
+        # Obtenim el darrer o el màxim idclient en la taula clients 
+        darrerID=self.obtenirDarrerIdClient()
+        # print(darrerID['maxId'])
+        # Nou ID a assignar
+        nouId=darrerID['maxId']+1
+        # print(nouId)
+        
+        # Generam el HASH del password
+        passwordHash=generate_password_hash(password)
+        # print(passwordHash)
+        
+        # print(type(dataAlta))
+        # print(dataAlta)
+        # Convertim dataAlta en string
+        stringData = dataAlta.strftime("%Y-%m-%d")
+        
+        # Eliminam espais en telefom
+        telefonSenseEspais = telefon.replace(" ","")
+        # print(telefonSenseEspais)
+        
+        # Inserim nou registre en taula usuaris
+        sql="INSERT INTO usuaris VALUES ("+str(nouId)+",'"+username+"','"+nom+"','"+llinatges+"','"+passwordHash+"','"+stringData+"','"+email+"','"+telefonSenseEspais+"')"
+        #print(sql)
+        cursor.execute(sql)
+        
+        # Inserim nou registre en taula clients
+        # Cal modificar en la taula clients, la longitud dels camps següents:
+        # nom varchar(30)
+        # telefon varchar (25)
+        # per evitar inconsistències
+        sql="INSERT INTO clients VALUES ("+str(nouId)+",'"+nom+"','"+llinatges+"','"+telefonSenseEspais+"')"
+        #print(sql)
+        cursor.execute(sql)
+        
+        db.close()
+         
+        
+        
+        
+        
+
     
 
 

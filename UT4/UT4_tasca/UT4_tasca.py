@@ -129,43 +129,6 @@ def logout():
     logout_user()
     return render_template('index.html')
 
-"""
-@app.route('/login', methods=['GET','POST'])
-def login():
-    if request.method == 'POST':
-        # Capturam valors enviats en formulari
-        nomUsuari=request.form['nomUsuari']
-        password=request.form['password']
-        #print(nomUsuari)
-        #print(password)
-        # Instaciam la CLASSE User
-        user=User()
-        #print(user.nomUsuari)
-
-        # Definim l'atribut nomUsuari de l'objecte user
-        user.nomUsuari=nomUsuari
-        #print(user.nomUsuari)
-
-        # Comprovam password
-        # print(user.comprovaPassword(password))
-        if user.comprovaPassword(password):
-            # TRUE, password -> OK
-            # Definim els atributs id, email, rol de l'objecte user
-            user.obtenirDadesUsuariSegonsNomUsuari()
-            print(user.id)
-
-            # Carregam usuari en login_manager
-            login_user(user)
-
-            return render_template('UT4_login.html')
-
-        else:
-            return render_template('UT4_login.html')
-
-    else:
-        return render_template('UT4_login.html') 
-"""
-
 
 @app.route('/nouUsuariRegistre', methods=['GET','POST'])
 def nou_usuari_registre():
@@ -176,22 +139,32 @@ def nou_usuari_registre():
     # Si s'ha enviat i validat el formulari, rebem els valors per POST
     if form.validate_on_submit():
 
-        # Desam els valors en variables de sessió
-        """
-        session['username']=form.username.data 
-        session['nom']=form.nom.data 
-        session['llinatges']=form.llinatges.data 
-        session['password']=form.password.data
-        session['confirm_password']=form.confirm_password.data
-        print(form.dataAlta.data)
-        print(type(form.dataAlta.data))
-        session['dataAlta']=form.dataAlta.data
-        session['email']=form.email.data
-        session['telefon']=form.telefon.data 
-        """
-
-        # Redirigim a resultats.html
-        return redirect(url_for('resultat'))
+        # Capturam els valors del formulari
+        username=form.username.data 
+        nom=form.nom.data 
+        llinatges=form.llinatges.data 
+        password=generate_password_hash(form.password.data)
+        dataAlta=form.dataAlta.data
+        email=form.email.data
+        telefon=form.telefon.data 
+        
+        """print(username)
+        print(nom)
+        print(llinatges)
+        print(password)
+        print(dataAlta)
+        print(email)
+        print(telefon)"""
+        
+        # Instaciam la CLASSE User
+        user=User()
+        
+        # Executam l'alta de l'usuari en la BBDD
+        user.altaUsuari(username,nom,llinatges,password,dataAlta,email,telefon)
+        
+        # Redirigim a formulari login
+        return redirect(url_for('formlogin',altaMissatge="USUARI AFEGIT CORRECTAMENT"))
+    
 
     # Si NO s'ha enviat el formulari,
     # o s'ha enviat però NO ha estat validat,

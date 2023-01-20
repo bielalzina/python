@@ -30,7 +30,11 @@
         <br />
         <div class="container">
             <div class="row">
-                <div class="col-6 alert alert-dark" role="alert">
+                <div class="col-6 alert alert-dark" role="alert">{% if loginMissatge %}
+                    <div class="alert alert-success" role="alert">
+                        <h3><strong>{{altaMissatge}}</strong></h3>
+                    </div>
+                    {% endif %}
                     <form
                         method="POST"
                         class="navbar-form navbar-right"
