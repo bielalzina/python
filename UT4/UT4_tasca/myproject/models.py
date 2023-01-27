@@ -2,6 +2,7 @@ from myproject import login_manager
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 import pymysql.cursors
+import datetime
 
 # En heretar l'UserMixin, tenim accés a molts atributs integrats
 # que podrem cridar en les nostres vistes!
@@ -19,9 +20,9 @@ def load_user(user_id):
     if user_id:
         userLM=User()
         userLM.obtenirDadesUserLM(user_id)
-        print('DADES userLM')
-        print(userLM.id)
-        print(userLM.nomUsuari)
+        #print('DADES userLM')
+        #print(userLM.id)
+        #print(userLM.nomUsuari)
         #print(userLM.nom)
         #print(userLM.llinatges)
         #print(userLM.password)
@@ -62,6 +63,7 @@ class User(UserMixin):
             resultatConsulta2=cursor.fetchone()
             # Resposta pot ser TRUE (password->OK) o FALSE (password->KO)
             resposta = check_password_hash(resultatConsulta2['password'],password)
+            
         # NO existeix cap registre amb aquest usuari o més d'un registre
         else:
              resposta=False
@@ -125,10 +127,7 @@ class User(UserMixin):
         darrerID=cursor.fetchone()
         db.close()
         return darrerID
-    
-      
-        
-        
+
 
     def altaUsuari(self,username,nom,llinatges,password,dataAlta,email,telefon):
         # CONNEXIO A BBDD
@@ -153,8 +152,7 @@ class User(UserMixin):
         
         # Generam el HASH del password
         passwordHash=generate_password_hash(password)
-        # print(passwordHash)
-        
+                
         # print(type(dataAlta))
         # print(dataAlta)
         # Convertim dataAlta en string
@@ -166,34 +164,200 @@ class User(UserMixin):
         
         # Inserim nou registre en taula usuaris
         sql="INSERT INTO usuaris VALUES ("+str(nouId)+",'"+username+"','"+nom+"','"+llinatges+"','"+passwordHash+"','"+stringData+"','"+email+"','"+telefonSenseEspais+"')"
-        #print(sql)
         cursor.execute(sql)
         
         # Inserim nou registre en taula clients
         # Cal modificar en la taula clients, la longitud dels camps següents:
-        # nom varchar(30)
-        # telefon varchar (25)
-        # per evitar inconsistències
+        # nom varchar(50)
+        # telefon varchar (20)
+        # per evitar inconsistències amb els valors permesos en el formulari
         sql="INSERT INTO clients VALUES ("+str(nouId)+",'"+nom+"','"+llinatges+"','"+telefonSenseEspais+"')"
         #print(sql)
         cursor.execute(sql)
         
         db.close()
-         
+    
+    
+    def retornaDadesPistes(self):
+        # connexxió a BBDD
+        db=pymysql.connect(host='localhost',
+                            user='root',
+                            db='gimnas',
+                            charset='utf8mb4',
+                            autocommit=True,
+                            cursorclass=pymysql.cursors.DictCursor)
+
+        cursor=db.cursor()
+        sql="SELECT * FROM pistes"
+        cursor.execute(sql)
+        ResQuery=cursor.fetchall()
+        db.close()
+        return ResQuery
+    
+    def retornaTotesReserves(self):
+        # connexxió a BBDD
+        db=pymysql.connect(host='localhost',
+                            user='root',
+                            db='gimnas',
+                            charset='utf8mb4',
+                            autocommit=True,
+                            cursorclass=pymysql.cursors.DictCursor)
+
+        cursor=db.cursor()
+        sql="SELECT * FROM reserves"
+        cursor.execute(sql)
+        ResQuery=cursor.fetchall()
+        db.close()
+        return ResQuery
+    
+    def converteixEnDateTime(self, data, hora):
+        anyReserva=int(data.strftime("%Y"))
+        mesReserva=int(data.strftime("%m"))
+        diaReserva=int(data.strftime("%d"))
+        dataHoraReserva = datetime.datetime(anyReserva, mesReserva, 
+                                            diaReserva, hora)
+        return dataHoraReserva
+
+    def comprovaDisponibiltat(self, llistaReserves,
+                              dataHoraReserva, tipusPistaReserva):
+        resultatComprovacio=0
+        for r in llistaReserves:
+            if dataHoraReserva==r['data'] and tipusPistaReserva==r['idpista']:
+                resultatComprovacio="Aquest dia i hora aquesta pista JA està reservada"
+                resultatComprovacio=resultatComprovacio+", prova amb uns altres valors"
+        return resultatComprovacio
+
+
+    def insereixReserva(self,dataReserva,idPistaReserva,idUsuari):
+        # connexxió a BBDD
+        db=pymysql.connect(host='localhost',
+                            user='root',
+                            db='gimnas',
+                            charset='utf8mb4',
+                            autocommit=True,
+                            cursorclass=pymysql.cursors.DictCursor)
+
+        cursor=db.cursor()
+        sql="INSERT INTO reserves (data,idpista,idclient)"
+        sql=sql+" VALUES ('"+dataReserva+"',"+str(idPistaReserva)+","+str(idUsuari)+");"
+        cursor.execute(sql)
+        db.close
+
+    def obtenirPrimeraDataReservaClient(self,idUsuari):
+        # connexxió a BBDD
+        db=pymysql.connect(host='localhost',
+                            user='root',
+                            db='gimnas',
+                            charset='utf8mb4',
+                            autocommit=True,
+                            cursorclass=pymysql.cursors.DictCursor)
+
+        cursor=db.cursor()
+        sql="SELECT MIN(data) primeraData FROM reserves WHERE idclient="+str(idUsuari)+";"
+        cursor.execute(sql)
+        primeraData=cursor.fetchone()
+        db.close()
+        return primeraData
+    
+    def tornaLimitsDiaris(self,data):
+        diaDeLaSetmana=int(data.strftime("%w"))
+        if diaDeLaSetmana==0: # Diumenge
+            limitInferior=data-datetime.timedelta(days=6)
+        else: # Dilluns, dimarts,.., dissabte
+            limitInferior=data-datetime.timedelta(days=(diaDeLaSetmana-1))
+        limitSuperior=limitInferior+datetime.timedelta(days=4)
+        limitSuperiorSQL=limitInferior+datetime.timedelta(days=5)
         
+        # Valors per insertar en HTML
+        extremInferiorHTML=limitInferior.strftime("%d/%m/%Y")
+        extremSuperiorHTML=limitSuperior.strftime("%d/%m/%Y")
         
+        # Valors per fer consultar SQL
+        extremInferiorSQL=limitInferior.strftime("%Y-%m-%d")
+        extremSuperiorSQL=limitSuperiorSQL.strftime("%Y-%m-%d")
         
-        
+
+        return [extremInferiorHTML,extremSuperiorHTML,
+                extremInferiorSQL,extremSuperiorSQL]
+    
+    def retornaReservesSetmana(self,diaInici,diaFinal,idpista):
+        # connexxió a BBDD
+        db=pymysql.connect(host='localhost',
+                            user='root',
+                            db='gimnas',
+                            charset='utf8mb4',
+                            autocommit=True,
+                            cursorclass=pymysql.cursors.DictCursor)
+
+        cursor=db.cursor()
+        sql="SELECT reserves.data,reserves.idpista,reserves.idclient,pistes.tipo"
+        sql=sql+" FROM reserves"
+        sql=sql+" INNER JOIN pistes ON reserves.idpista=pistes.idpista"
+        sql=sql+" WHERE reserves.idpista='"+str(idpista)+"'"
+        sql=sql+" AND data BETWEEN '"+diaInici+"' AND '"+diaFinal+"'"
+        sql=sql+" ORDER BY reserves.data ASC;"
+        #print(sql)
+        cursor.execute(sql)
+        ResQuery=cursor.fetchall()
+        db.close()
+        return ResQuery
+    
+    def tornaValorsTaula(self,reservesSetmana,dataDilluns,idUsuari):
+        dataDilluns=dataDilluns.date()
+        taula=[]
+        for fila in range(0,5):
+            filaTemp=[]
+            for columna in range(0,6):
+                tempVal=""
+                subFila=[]
+                for reserva in reservesSetmana:
+                    subFilaVal=""
+                    dataReserva=reserva['data'].date()
+                    dataDia=dataDilluns+datetime.timedelta(days=fila)
+                    horaReserva=int(reserva['data'].strftime("%H"))
+                    if dataReserva==dataDia and horaReserva==columna+15:
+                        if reserva['idclient']==idUsuari:
+                            # L'usuari actiu ha fet aquesta reserva
+                            subFilaVal=True
+                            subFila.append(subFilaVal)
+                            subFilaVal="RESERVADA"
+                            subFila.append(subFilaVal)
+                        else:
+                            # L'usuari actiu NO ha fet aquesta reserva
+                            subFilaVal=False
+                            subFila.append(subFilaVal)
+                            subFilaVal="NO DISPONIBLE"
+                            subFila.append(subFilaVal)
+                        tempVal=subFila
+                filaTemp.append(tempVal)
+            taula.append(filaTemp)
+        return taula
 
     
+    def tornaArrayTaules(self, extremsSetmana,idusuari):
+        # Obtenim la data del dia inicial de la setmana
+        dataDilluns=datetime.datetime.strptime(extremsSetmana[2],
+                                                     '%Y-%m-%d')
+        # Obtenim llista de reserves de la setmana actual (COBERTA)
+        llistaReservesCoberta = self.retornaReservesSetmana(extremsSetmana[2],
+                                                      extremsSetmana[3],1)
+        # Obtenim els valors ARRAY per la pista Coberta
+        valorsTaulaCoberta=self.tornaValorsTaula(llistaReservesCoberta,
+                                          dataDilluns,
+                                          idusuari)
+        # Obtenim llista de reserves de la setmana actual (EXTERIOR)
+        llistaReservesExterior = self.retornaReservesSetmana(extremsSetmana[2],
+                                                      extremsSetmana[3],2)
+        # Obtenim els valors ARRAY per la pista Coberta
+        valorsTaulaExterior=self.tornaValorsTaula(llistaReservesExterior,
+                                          dataDilluns,
+                                          idusuari)
+        
+        return [valorsTaulaCoberta,valorsTaulaExterior]
+        
+        
 
 
-
-
-
-
-
-""" 
 class gimnas(object):
 
     def carregaClients():
@@ -374,4 +538,3 @@ class gimnas(object):
         cursor.execute(sql)
         db.close
 
- """

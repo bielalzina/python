@@ -24,6 +24,8 @@ altaClient=False
 # Variable per activar visualització o no del formulari d'edició de dades del client
 editaClient=False
 
+
+
 def tornaDiaSetmana(dataHoraReserva):
     diaSetmana=dataHoraReserva.strftime("%w")
     return diaSetmana
@@ -159,6 +161,7 @@ def setmanamenys():
     # El dilluns de la darrera setmana consultada esta desat
     # en la variable dataDarrerDilluns
     # Cal doncs restar-li 7 dies i obtindrem el nou limit inferior
+    
     global dataDarrerDilluns
     dataDarrerDilluns=dataDarrerDilluns-datetime.timedelta(days=7)
 
@@ -179,9 +182,12 @@ def setmanamenys():
     # Obtenim llista de reserves de la setmana
 
     reservesSetmana=gimnas.carregaReservesSetmana(diaIniciSQL,diaFinalSQL)
+    
 
     # Obtenim els valors per pintar la taula
     valorsTaula=tornaValorsTaula(reservesSetmana,dataDarrerDilluns)
+    
+    #print(valorsTaula)
 
     return render_template('UT3_tasca_reserves.html',
                             diaInici=diaIniciSetmana,
@@ -218,6 +224,8 @@ def setmanames():
 
     # Obtenim els valors per pintar la taula
     valorsTaula=tornaValorsTaula(reservesSetmana,dataDarrerDilluns)
+    
+    #print(valorsTaula)
 
     return render_template('UT3_tasca_reserves.html',
                             diaInici=diaIniciSetmana,

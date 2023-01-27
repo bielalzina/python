@@ -22,22 +22,23 @@
         <br />
         <div class="container">
             <div class="row">
-                <div class="col-9 alert alert-primary" role="alert">
+                <div class="col-12 alert alert-primary" role="alert">
                     <h1>Tasca DWES4 - USUARIS i FORMULARIS</h1>
-                </div>
-            </div>
-        </div>
-        <div class="container">
-            <div class="row">
-                <div class="col-9 alert alert-info" role="alert">
-                    <h1>ALTA NOU USUARI</h1>
                 </div>
             </div>
         </div>
         <br />
         <div class="container">
-            <div class="row">
-                <div class="col-9 alert alert-dark" role="alert">
+            <div class="row justify-content-center">
+                <div class="col-6 alert alert-info" role="alert">
+                    <h1>ALTA NOU USUARI</h1>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-6 alert alert-dark" role="alert">
                     {% for field, errors in form.errors.items() %}
                     <div class="alert alert-danger" role="alert">
                         {{ ', '.join(errors) }}

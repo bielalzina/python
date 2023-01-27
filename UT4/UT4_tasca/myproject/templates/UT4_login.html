@@ -22,15 +22,25 @@
         <br />
         <div class="container">
             <div class="row">
-                <div class="col-9 alert alert-primary" role="alert">
+                <div class="col-12 alert alert-primary" role="alert">
                     <h1>Tasca DWES4 - USUARIS i FORMULARIS</h1>
                 </div>
             </div>
         </div>
         <br />
+
         <div class="container">
-            <div class="row">
-                <div class="col-6 alert alert-dark" role="alert">{% if loginMissatge %}
+            <div class="row justify-content-center">
+                <div class="col-6 alert alert-info" role="alert">
+                    <h1>INCIA SESSIÓ</h1>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-6 alert alert-dark" role="alert">
+                    {% if altaMissatge %}
                     <div class="alert alert-success" role="alert">
                         <h3><strong>{{altaMissatge}}</strong></h3>
                     </div>
@@ -42,7 +52,6 @@
                         action="{{ url_for('login') }}"
                     >
                         <br />
-                        <h1 class="h3 mb-3 fw-normal">INICIA SESSIÓ</h1>
 
                         <input
                             type="text"
@@ -76,9 +85,19 @@
                 </div>
             </div>
         </div>
+        <br />
         <div class="container">
-            <div class="row">
-                <div class="col-6">
+            <div class="row justify-content-center">
+                <div class="col-6 alert alert-info" role="alert">
+                    <h1>CREA EL TEU USUARI</h1>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-6 alert alert-dark" role="alert">
+                    <br />
                     <p>
                         <a
                             class="btn btn-primary"

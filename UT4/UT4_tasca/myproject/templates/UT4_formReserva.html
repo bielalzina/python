@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, shrink-to-fit=no"
+        />
+
+        <!-- Bootstrap CSS -->
+        <link
+            rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+            integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
+            crossorigin="anonymous"
+        />
+
+        <title>Tasca DWES4</title>
+    </head>
+    <body>
+        <br />
+        <div class="container">
+            <div class="row">
+                <div class="col-12 alert alert-primary" role="alert">
+                    <h1>Tasca DWES4 - USUARIS i FORMULARIS</h1>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-12 alert alert-info" role="alert">
+                    <h2>
+                        <img
+                            src="../static/user.svg"
+                            class="img-thumbnail"
+                            alt="usuari"
+                            width="36"
+                            height="36"
+                        />
+                        <strong
+                            >{{current_user.nom}}&nbsp;{{current_user.llinatges}}</strong
+                        >
+                    </h2>
+                    <br />
+
+                    <div class="row">
+                        <div class="col-4">
+                            <a
+                                class="btn btn-primary btn-lg"
+                                href="{{ url_for('formreserva') }}"
+                                role="button"
+                                >RESERVAR PISTA</a
+                            >
+                        </div>
+                        <div class="col-4">
+                            <a
+                                class="btn btn-info btn-lg"
+                                href="{{ url_for('dashboard') }}"
+                                role="button"
+                                >VEURE RESERVES</a
+                            >
+                        </div>
+                        <div class="col-4">
+                            <a
+                                class="btn btn-danger btn-lg"
+                                href="{{ url_for('logout') }}"
+                                role="button"
+                                >SURT DE LA SESSIÓ</a
+                            >
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-6 alert alert-info" role="alert">
+                    <h1>FÉS UNA RESERVA</h1>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-6 alert alert-dark" role="alert">
+                    {% for field, errors in form.errors.items() %}
+                    <div class="alert alert-danger" role="alert">
+                        {{ ', '.join(errors) }}
+                    </div>
+                    {% endfor %}
+
+                    <form
+                        method="POST"
+                        class="navbar-form navbar-right"
+                        role="form"
+                    >
+                        {% if missatgeDisponibilitat %}
+                        <div class="alert alert-danger" role="alert">
+                            <h4><strong>{{missatgeDisponibilitat}}</strong></h4>
+                        </div>
+                        {% endif %} {# Aquest CAMP OCULT és una funció de
+                        seguretat CSRF. #} {{ form.hidden_tag() }}
+                        <br />{{form.dataReserva.label}}
+                        {{form.dataReserva(class_="form-control")}}
+                        <br />{{form.horaReserva.label}}
+                        {{form.horaReserva(class_="form-control")}}
+                        <br />
+                        {{form.tipusPista.label}}
+                        {{form.tipusPista(class_="form-control")}}
+                        <br />
+                        {{form.btnEnviar(class_="btn btn-success")}}
+                        <button type="reset" class="btn btn-danger">
+                            NETEJA
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Optional JavaScript -->
+        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        <script
+            src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+            integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+            crossorigin="anonymous"
+        ></script>
+        <script
+            src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+            integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+            crossorigin="anonymous"
+        ></script>
+        <script
+            src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+            integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+            crossorigin="anonymous"
+        ></script>
+    </body>
+</html>

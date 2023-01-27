@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import (StringField, PasswordField, SubmitField, DateField)
+from wtforms import (StringField, PasswordField, SubmitField, DateField,
+                     SelectField)
 from wtforms.validators import (DataRequired, Regexp, Length, Email, 
                                 ValidationError, EqualTo)
 import datetime
@@ -15,15 +16,19 @@ def validaUserName(form, camp):
             raise ValidationError(f"La paraula \"{paraula}\" no està permesa") 
 
 
-# VALIDAM QUE DATA ALTA <= AVUI
+# VALIDAM QUE DATA RESERVA >= AVUI
 def validaDataAlta(form, camp):
   avui=datetime.date.today()
   if camp.data > avui:
     raise ValidationError(f"La data d\'alta no pot ser posterior a avui")
+  
+# VALIDAM QUE NO ES PUGUI FER RESERVA EN CAPS DE SETMANA
+#def comprovaCapsSetmana(form, camp):
+
 
 # Cream una classe WTFORMS
 
-class InfoForm(FlaskForm):
+class UsuariForm(FlaskForm):
     username = StringField('NOM D\'USUARI:', 
                        validators=[DataRequired(),
                                    Length(min=6, max=15,
@@ -61,6 +66,7 @@ class InfoForm(FlaskForm):
                                           no coincideixen')])
     
     dataAlta = DateField('DIA D\'ALTA:',
+                         default=datetime.date.today(),
                              validators=[DataRequired(),
                                          validaDataAlta])
     
@@ -77,3 +83,42 @@ class InfoForm(FlaskForm):
 
     
     btnEnviar = SubmitField('ENVIAR')
+
+# VALIDAM QUE DIA RESERVA >= AVUI
+def validaDiaReserva(form, camp):
+  avui=datetime.date.today()
+  if camp.data < avui:
+    raise ValidationError(f"Només es pot sol·licitar una reserva per avui o \
+      dia posterior")
+
+
+# VALIDAM QUE DIA RESERVA NO SIGUI DISSABTE NI DIUMENGE
+def validaCapSetmana(form, camp):
+  diaSetmana=camp.data.strftime("%w")
+  if diaSetmana=="0" or diaSetmana=="6":
+    raise ValidationError(f"No es possible sol·licitar una reserva per DISSABTE \
+      o DIUMENGE")
+
+
+
+class ReservaForm(FlaskForm):
+  dataReserva = DateField('DATA:',
+                         default=datetime.date.today(),
+                             validators=[DataRequired(),
+                                         validaDiaReserva,
+                                         validaCapSetmana])
+  
+  horaReserva = SelectField('HORA',
+                            choices=[(15, '15:00 - 16:00'), 
+                                     (16, '16:00 - 17:00'),
+                                     (17, '17:00 - 18:00'),
+                                     (18, '18:00 - 19:00'),
+                                     (19, '19:00 - 20:00'),
+                                     (20, '20:00 - 21:00')],
+                            validators=[DataRequired()])
+  
+  tipusPista = SelectField('SELECCIONA LA PISTA',
+                           validators=[DataRequired()])
+
+
+  btnEnviar = SubmitField('ENVIAR')

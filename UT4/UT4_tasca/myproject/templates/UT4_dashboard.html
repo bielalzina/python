@@ -35,20 +35,228 @@
                             src="../static/user.svg"
                             class="img-thumbnail"
                             alt="usuari"
-                            width="36" height="36"
+                            width="36"
+                            height="36"
                         />
                         <strong
                             >{{current_user.nom}}&nbsp;{{current_user.llinatges}}</strong
                         >
                     </h2>
-                    <p>
-                        <a
-                            class="btn btn-danger btn-lg"
-                            href="{{ url_for('logout') }}"
-                            role="button"
-                            >SURT DE LA SESSIÓ</a
+                    <br />
+                    <div class="row">
+                        <div class="col-4">
+                            <a
+                                class="btn btn-primary btn-lg"
+                                href="{{ url_for('formreserva') }}"
+                                role="button"
+                                >RESERVAR PISTA</a
+                            >
+                        </div>
+                        <div class="col-4">
+                            <a
+                                class="btn btn-info btn-lg"
+                                href="{{ url_for('dashboard') }}"
+                                role="button"
+                                >VEURE RESERVES</a
+                            >
+                        </div>
+                        <div class="col-4">
+                            <a
+                                class="btn btn-danger btn-lg"
+                                href="{{ url_for('logout') }}"
+                                role="button"
+                                >SURT DE LA SESSIÓ</a
+                            >
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="container">
+            <div class="row">
+                <div class="col-12 alert alert-primary" role="alert">
+                    <div class="row">
+                        <div class="col-1">
+                            <a
+                                href="{{ url_for('dashboardCanviSetmana',
+                                                dilluns=diaInici,
+                                                accio='menys') }}"
+                                ><img src="../static/left.png"
+                            /></a>
+                        </div>
+                        <div
+                            class="col-10"
+                            style="text-align: center; margin: auto"
                         >
-                    </p>
+                            <h1>
+                                Reserves setmana del {{diaInici}} a {{diaFinal}}
+                            </h1>
+                        </div>
+                        <div class="col-1">
+                            <a
+                                href="{{ url_for('dashboardCanviSetmana',
+                                                dilluns=diaInici,
+                                                accio='mes') }}"
+                                ><img src="../static/right.png"
+                            /></a>
+                        </div>
+                    </div>
+                </div>
+                <p>&nbsp;</p>
+                <div class="col-12 alert alert-warning" role="alert">
+                    <div class="row">
+                        <div class="col align-self-center">
+                            <h2 style="text-align: center">
+                                RESERVES PISTA COBERTA
+                            </h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table id="userList" class="table table-bordered">
+                        <thead class="thead-light">
+                            <th></th>
+                            <th style="text-align: center">Dilluns</th>
+                            <th style="text-align: center">Dimarts</th>
+                            <th style="text-align: center">Dimecres</th>
+                            <th style="text-align: center">Dijous</th>
+                            <th style="text-align: center">Divendres</th>
+                        </thead>
+                        <tbody>
+                            {% for fila in range (0,6) %}
+                            <tr>
+                                <th
+                                    style="
+                                        text-align: center;
+                                        background-color: #e9ecef;
+                                    "
+                                >
+                                    {{fila+15}}:00
+                                </th>
+                                {% for columna in range (0,5) %} {% if
+                                reservesCoberta[columna][fila][0]==True %}
+                                <td
+                                    style="
+                                        text-align: center;
+                                        font-weight: bold;
+                                        background-color: #b8e4ff;
+                                    "
+                                >
+                                    {{reservesCoberta[columna][fila][1]}}
+                                </td>
+                                {% elif reservesCoberta[columna][fila][0]==False
+                                %}
+                                <td
+                                    style="
+                                        text-align: center;
+                                        font-weight: bold;
+                                        background-color: #fcb7af;
+                                    "
+                                >
+                                    {{reservesCoberta[columna][fila][1]}}
+                                </td>
+                                {% else %}
+                                <td style="background-color: #b0f2c2">
+                                    {{reservesCoberta[columna][fila][1]}}
+                                </td>
+                                {% endif %} {% endfor %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <p>&nbsp;</p>
+                <div class="col-12 alert alert-warning" role="alert">
+                    <div class="row">
+                        <div class="col align-self-center">
+                            <h2 style="text-align: center">
+                                RESERVES PISTA EXTERIOR
+                            </h2>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table id="userList" class="table table-bordered">
+                        <thead class="thead-light">
+                            <th></th>
+                            <th style="text-align: center">Dilluns</th>
+                            <th style="text-align: center">Dimarts</th>
+                            <th style="text-align: center">Dimecres</th>
+                            <th style="text-align: center">Dijous</th>
+                            <th style="text-align: center">Divendres</th>
+                        </thead>
+                        <tbody>
+                            {% for fila in range (0,6) %}
+                            <tr>
+                                <th
+                                    style="
+                                        text-align: center;
+                                        background-color: #e9ecef;
+                                    "
+                                >
+                                    {{fila+15}}:00
+                                </th>
+                                {% for columna in range (0,5) %} {% if
+                                reservesExterior[columna][fila][0]==True %}
+                                <td
+                                    style="
+                                        text-align: center;
+                                        font-weight: bold;
+                                        background-color: #b8e4ff;
+                                    "
+                                >
+                                    {{reservesExterior[columna][fila][1]}}
+                                </td>
+                                {% elif
+                                reservesExterior[columna][fila][0]==False %}
+                                <td
+                                    style="
+                                        text-align: center;
+                                        font-weight: bold;
+                                        background-color: #fcb7af;
+                                    "
+                                >
+                                    {{reservesExterior[columna][fila][1]}}
+                                </td>
+                                {% else %}
+                                <td style="background-color: #b0f2c2">
+                                    {{reservesExterior[columna][fila][1]}}
+                                </td>
+                                {% endif %} {% endfor %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                    <p>&nbsp;</p>
+                    <div class="table-responsive">
+                        <table id="userList" class="table table-bordered" style="width: auto;">
+                            <thead class="thead-light">
+                                <th style="text-align: center;
+                                font-weight: bold;">OBSERVACIONS</th>
+                                
+                            </thead>
+                            <tbody>
+                                <tr><td style="
+                                    text-align: center;
+                                    font-weight: bold;
+                                    background-color: #b8e4ff;
+                                ">LES TEVES RESERVES</td></tr>
+                                <tr><td style="
+                                    text-align: center;
+                                    font-weight: bold;
+                                    background-color: #fcb7af;
+                                ">RESERVES D'ALTRES USUARIS</td></tr>
+                                <tr><td style="
+                                    text-align: center;
+                                    font-weight: bold;
+                                    background-color: #b0f2c2;
+                                ">PISTA DISPONIBLE</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
