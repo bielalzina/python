@@ -18,7 +18,6 @@ class gimnas(object):
     
     def desconecta(self):
         self.db.close()
-        
     
     def tornaUsuaris(self):
         sql="SELECT id,username,email,nom,llinatges,telefon,diaalta FROM usuaris"
@@ -32,27 +31,37 @@ class gimnas(object):
         return ResQuery
     
     def nouUsuari(self, camps):
-        # Obtenim ID pel nou usuari
-        sql="SELECT MAX(id)+1 nouID FROM usuaris"
+        # Comprovam que el nom d'usuari NO estigui ocupat
+        sql="SELECT username FROM usuaris WHERE username='"+camps['username']+"'"
         self.cursor.execute(sql)
-        nouID=self.cursor.fetchone()
+        ResQuery=self.cursor.fetchone()
+        #print(ResQuery)
+        if (ResQuery==None):
+            
+            # Obtenim ID pel nou usuari
+            sql="SELECT MAX(id)+1 nouID FROM usuaris"
+            self.cursor.execute(sql)
+            nouID=self.cursor.fetchone()
+            
+            # Generam HASH pel password
+            camps['password']=generate_password_hash(camps['password'])
+            
+            # Afegim usuari
+            sql="INSERT INTO usuaris (id"
+            for a in camps:
+                sql = sql + ","+a
+            sql = sql + ") VALUES ("+str(nouID['nouID'])
+            for a in camps:
+                sql = sql + ",'"+camps[a]+"'"
+            sql = sql + ")"
+            self.cursor.execute(sql)
+            
+            # Retornam nou usuari 
+            ResQuery=self.tornaUsuariPerID(nouID['nouID'])
+            return ResQuery
         
-        # Generam HASH pel password
-        camps['password']=generate_password_hash(camps['password'])
-        
-        # Afegim usuari
-        sql="INSERT INTO usuaris (id"
-        for a in camps:
-            sql = sql + ","+a
-        sql = sql + ") VALUES ("+str(nouID['nouID'])
-        for a in camps:
-            sql = sql + ",'"+camps[a]+"'"
-        sql = sql + ")"
-        self.cursor.execute(sql)
-        
-        # Retornam nou usuari 
-        ResQuery=self.tornaUsuariPerID(nouID['nouID'])
-        return ResQuery
+        else:
+            return('UNABLE TO REGISTER THE OPERATION')
 
 
     def tornaUsuariPerID(self, id_usuari):
@@ -172,17 +181,28 @@ class gimnas(object):
         # print(type(camps['data']))
         # print(camps['idpista'])
         # print(type(camps['idpista']))
-
-        sql="INSERT INTO reserves (data,idpista,idclient)"
-        sql = sql + " values ('"+camps['data']+"',"+str(camps['idpista'])+","
-        sql = sql + str(id_usuari)+")"
-        # print(sql)
+        
+        # Comprovam disponibilitat de la reserva
+        sql="SELECT data, idpista FROM reserves"
+        sql=sql+" WHERE data='"+camps['data']+"' "
+        sql=sql+" AND idpista="+str(camps['idpista'])
         self.cursor.execute(sql)
+        ResQuery=self.cursor.fetchone()
+        #print(ResQuery)
+        if (ResQuery==None):
+            sql="INSERT INTO reserves (data,idpista,idclient)"
+            sql = sql + " values ('"+camps['data']+"',"+str(camps['idpista'])+","
+            sql = sql + str(id_usuari)+")"
+            # print(sql)
+            self.cursor.execute(sql)
 
-        # Retornam llistat de reserves fetes per l'usuari
-        llistatReserves=self.tornaReservesUsuari(id_usuari)
-        return llistatReserves
-    
+            # Retornam llistat de reserves fetes per l'usuari
+            llistatReserves=self.tornaReservesUsuari(id_usuari)
+            return llistatReserves
+
+        else:
+            return('UNABLE TO REGISTER THE OPERATION')
+
     def eliminaReservaUsuari(self, id_usuari, camps):
         sql = "DELETE FROM reserves WHERE data='"+camps['data']+"'"
         sql = sql + " AND idpista="+str(camps['idpista'])
