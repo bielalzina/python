@@ -38,6 +38,7 @@ class usuari(Resource):
         mt.conecta()
         resultat=mt.eliminaUsuari(id_usuari)
         mt.desconecta()
+        return resultat
 
 class reservesSetmana(Resource):
     def get(self, data):
@@ -70,6 +71,7 @@ class reservesUsuari(Resource):
         mt.conecta()
         resultat=mt.eliminaReservaUsuari(id_usuari,request.json)
         mt.desconecta()
+        return resultat
 
 #GET (tots els usuaris) i POST (afegeix 1 usuari) 
 api.add_resource(usuaris,'/gimnas/usuari')

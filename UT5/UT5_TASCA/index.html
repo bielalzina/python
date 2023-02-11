@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="ca">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, shrink-to-fit=no"
+        />
+
+        <!-- Bootstrap CSS -->
+        <link
+            rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+            integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
+            crossorigin="anonymous"
+        />
+
+        <title>API REST GIMNÀS</title>
+    </head>
+    <body>
+        <br />
+        <div class="container">
+            <div class="row">
+                <div class="col-12 alert alert-primary" role="alert">
+                    <h1>MANUAL API REST GIMNÀS</h1>
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="container">
+            <h2>OBJECTIU</h2>
+            <p>
+                Aquest document té com objectiu servir de manual d’ús de les
+                APIs exposades en el sistema de gestió d’usuaris i reserves d’un
+                gimnàs
+            </p>
+            <br />
+            <h2>CATÀLEG APIs</h2>
+            <p>Les funcions implementades són:</p>
+            <ul>
+                <li>FUNCIONS RELATIVES ALS USUARIS:</li>
+                <ul>
+                    <br />
+                    <li>/gimnas/usuari</li>
+                    <li>/gimnas/usuari/id</li>
+                </ul>
+                <br />
+                <li>FUNCIONS RELATIVES A LES RESERVES:</li>
+                <ul>
+                    <br />
+                    <li>/gimnas/reserves/setmana/data</li>
+                    <li>/gimnas/reserves</li>
+                    <li>/gimnas/reserves/usuari/id_usuari</li>
+                </ul>
+            </ul>
+            <br />
+            <h2>DESCRIPCIÓ DE LES APIs</h2>
+            <br />
+            <div class="row">
+                <br />
+                <ul>
+                    <li>
+                        <h3>USUARIS</h3>
+                        <br />
+                        <ul>
+                            <li>
+                                <h4>/gimnas/usuari</h4>
+                                <br />
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">MÈTODE</th>
+                                            <th scope="col">FUNCIONAMENT</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th scope="row">GET</th>
+                                            <td>
+                                                <p>
+                                                    Retorna una llista amb tots
+                                                    els camps de la llista
+                                                    usuaris excepte el password
+                                                </p>
+                                                <p>Exemple:</p>
+                                                <pre><code>
+            [
+                {
+                    "id": 1,
+                    "username": "jose",
+                    "email": "jose.merinopanades@gmail.com",
+                    "nom": "Jose",
+                    "llinatges": "Merino",
+                    "telefon": "333444555",
+                    "diaalta": "04/10/2022"
+                },
+                {
+                    "id": 2,
+                    "username": "root",
+                    "email": "administrador@paucasesnovescifp.cat",
+                    "nom": "Super",
+                    "llinatges": "Jefe",
+                    "telefon": "999111222",
+                    "diaalta": "05/10/2022"
+                },
+                …..
+            ]
+            
+                                                    </code></pre>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">POST</th>
+                                            <td>
+                                                <p>
+                                                    Afegeix un usuari, per la
+                                                    qual cosa cal introduir les
+                                                    dades del nou usuari en el
+                                                    format següent (JSON):
+                                                </p>
+                                                <pre><code>
+            {
+                "username": "pruna",
+                "password": "contra",
+                "email": "igansi@gmail.com",
+                "nom": "IGNASI",
+                "llinatges": "ALZINA AMER",
+                "telefon": "669000000",
+                "diaalta": "2023-11-29"
+            }
+                                                    </code></pre>
+                                                <p>
+                                                    El sistema realitza la
+                                                    conversió a HASH del
+                                                    password.
+                                                </p>
+                                                <p>
+                                                    Si username no existeix en
+                                                    la BBDD, l’operació POST
+                                                    respon un JSON amb les dades
+                                                    introduïdes, sense password
+                                                    i amb l’ID assignat:
+                                                </p>
+                                                <pre><code>
+            {
+                "id": 13,   
+                "username": "pruna",
+                "email": "igansi@gmail.com",
+                "nom": "IGNASI",
+                "llinatges": "ALZINA AMER",
+                "telefon": "669000000",
+                "diaalta": "29/11/2023"
+            }
+                                                    </code></pre>
+                                                <p>
+                                                    Si username existeix en la
+                                                    BBDD, l¡operació POST respon
+                                                    amb un missatge indicant que
+                                                    no s’ha pogut realitzar
+                                                    l’operació:
+                                                </p>
+                                                <pre><code>"UNABLE TO REGISTER THE OPERATION (POST)"</code></pre>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </li>
+                            <li>
+                                <h4>/gimnas/usuari/id</h4>
+                                <br />
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">MÈTODE</th>
+                                            <th scope="col">FUNCIONAMENT</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th scope="row">GET</th>
+                                            <td>
+                                                <p>
+                                                    Retorna els detalls de
+                                                    l'usuari excepte el
+                                                    password, en funció de l'id
+                                                    indicat en la petició
+                                                </p>
+                                                <pre><code>/gimnas/usuari/id</code></pre>
+                                                <p>Exemple:</p>
+                                                <pre><code>
+                {
+                    "id": 13,   
+                    "username": "pruna",
+                    "email": "igansi@gmail.com",
+                    "nom": "IGNASI",
+                    "llinatges": "ALZINA AMER",
+                    "telefon": "669000000",
+                    "diaalta": "29/11/2023"
+                }
+                
+                                                        </code></pre>
+                                                <p>
+                                                    Si l'id no existeix en la
+                                                    BBDD, la petició respon amb
+                                                    un missatge indicant que no
+                                                    s’ha pogut processar
+                                                    l’operació:
+                                                </p>
+                                                <pre><code>"UNABLE TO PROCESS THE OPERATION (GET)"</code></pre>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">PUT</th>
+                                            <td>
+                                                <p>
+                                                    Modifica les dades de
+                                                    l'usuari amb l'id indicat en
+                                                    la petició.
+                                                </p>
+                                                <pre><code>/gimnas/usuari/id</code></pre>
+                                                <p>
+                                                    Si es modifica el password,
+                                                    el sistema realitza la
+                                                    conversió a HASH del
+                                                    password
+                                                </p>
+                                                <p>
+                                                    S'han d'introduir les dades
+                                                    que es volen modificar en el
+                                                    format següent (JSON):
+                                                </p>
+
+                                                <pre><code>
+                {
+                    "username": "pruna",
+                    "password": "passw@rd",
+                    "email": "pruna@gmail.com",
+                    "nom": "PRUNA",
+                    "llinatges": "FIGA DE MORO",
+                    "telefon": "666666666",
+                    "diaalta": "2023-02-15"
+                }
+                                                        </code></pre>
+                                                <p>
+                                                    Si l'id existeix en la BBDD,
+                                                    l’operació PUT respon un
+                                                    JSON amb les dades
+                                                    modificades:
+                                                </p>
+                                                <pre><code>
+                {
+                    "id": 13,   
+                    "username": "pruna",
+                    "email": "pruna@gmail.com",
+                    "nom": "PRUNA",
+                    "llinatges": "FIGA DE MORO",
+                    "telefon": "666666666",
+                    "diaalta": "15/02/2023"
+                }
+                                                        </code></pre>
+                                                <p>
+                                                    Si l'id no existeix en la
+                                                    BBDD, la petició respon amb
+                                                    un missatge indicant que no
+                                                    s’ha pogut processar
+                                                    l’operació:
+                                                </p>
+                                                <pre><code>"UNABLE TO PROCESS THE OPERATION (PUT)"</code></pre>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">DELETE</th>
+                                            <td>
+                                                <p>
+                                                    Elimina l'usuari amb l'id
+                                                    indicat en la petició.
+                                                </p>
+                                                <pre><code>/gimnas/usuari/id</code></pre>
+
+                                                <p>
+                                                    Si l'id existeix en la BBDD,
+                                                    l’operació PUT respon un
+                                                    JSON amb les dades
+                                                    modificades:
+                                                </p>
+                                                <pre><code>
+                {
+                    "id": 13,   
+                    "username": "pruna",
+                    "email": "pruna@gmail.com",
+                    "nom": "PRUNA",
+                    "llinatges": "FIGA DE MORO",
+                    "telefon": "666666666",
+                    "diaalta": "15/02/2023"
+                }
+                                                        </code></pre>
+                                                <p>
+                                                    Si l'id no existeix en la
+                                                    BBDD, la petició respon amb
+                                                    un missatge indicant que no
+                                                    s’ha pogut processar
+                                                    l’operació:
+                                                </p>
+                                                <pre><code>"UNABLE TO PROCESS THE OPERATION (PUT)"</code></pre>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <br />
+
+                <br />
+                <ul>
+                    <li>
+                        <h3>RESERVES</h3>
+                        <br />
+                    </li>
+                    <ul>
+                        <li>
+                            <h4>/gimnas/reserves/setmana/data</h4>
+                            <br />
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">MÈTODE</th>
+                                        <th scope="col">FUNCIONAMENT</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th scope="row">GET</th>
+                                        <td>
+                                            <p>
+                                                Retorna les dades (data-hora,
+                                                tipus de pista i usuari) de la
+                                                setmana indicada en la petició
+                                                en format (YYYY-mm-dd)
+                                            </p>
+                                            <pre><code>/gimnas/reserves/setmana/YYYY-mm-dd</code></pre>
+                                            <p>Exemple:</p>
+                                            <pre><code>
+                    [
+                        {
+                            "data": "30/01/2023, 17:00:00",
+                            "tipo": "Exterior",
+                            "username": "fvmaer"
+                        },
+                        {
+                            "data": "02/02/2023, 16:00:00",
+                            "tipo": "Coberta",
+                            "username": "jose"
+                        },
+                        {
+                            "data": "02/02/2023, 16:00:00",
+                            "tipo": "Exterior",
+                            "username": "bielalzina"
+                        },
+                        {
+                            "data": "05/02/2023, 20:00:00",
+                            "tipo": "Coberta",
+                            "username": "fvmaer"
+                        }
+                    ]
+        
+                                            </code></pre>
+                                            <p>
+                                                Si en la setmana indicada no hi
+                                                cap reserva, s'obtè una resposta
+                                                buida:
+                                            </p>
+                                            <pre><code>[]</code></pre>
+                                            <p>
+                                                Si la data indicada és
+                                                incorrecta, s'obtè la resposta:
+                                            </p>
+                                            <pre><code>"UNABLE TO PROCESS THE OPERATION (GET)"</code></pre>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </li>
+                        <li>
+                            <h4>/gimnas/reserves</h4>
+                            <br />
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">MÈTODE</th>
+                                        <th scope="col">FUNCIONAMENT</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th scope="row">GET</th>
+                                        <td>
+                                            <p>
+                                                Retorna les dades (data-hora,
+                                                tipus de pista i usuari) de la
+                                                setmana actual
+                                            </p>
+                                            <pre><code>/gimnas/reserves</code></pre>
+                                            <p>Exemple:</p>
+                                            <pre><code>
+                [
+                    {
+                        "data": "06/02/2023, 15:00:00",
+                        "tipo": "Coberta",
+                        "username": "jose"
+                    },
+                    {
+                        "data": "06/02/2023, 15:00:00",
+                        "tipo": "Exterior",
+                        "username": "user1"
+                    },
+                    {
+                        "data": "06/02/2023, 16:00:00",
+                        "tipo": "Coberta",
+                        "username": "user1"
+                    },
+                    {
+                        "data": "06/02/2023, 16:00:00",
+                        "tipo": "Exterior",
+                        "username": "user1"
+                    }
+                ]
+        
+                                            </code></pre>
+                                            <p>
+                                                Si en la setmana indicada no hi
+                                                cap reserva, s'obtè una resposta
+                                                buida:
+                                            </p>
+                                            <pre><code>[]</code></pre>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </li>
+                        <li>
+                            <h4>/gimnas/reserves/usuari/id_usuari</h4>
+                            <br />
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">MÈTODE</th>
+                                        <th scope="col">FUNCIONAMENT</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th scope="row">GET</th>
+                                        <td>
+                                            <p>
+                                                Retorna totes les reserves de
+                                                l'usuari amb l'id_usuari indicat
+                                                a la petició
+                                            </p>
+                                            <pre><code>/gimnas/reserves/usuari/id_usuari</code></pre>
+                                            <p>Exemple:</p>
+                                            <pre><code>
+                [
+                    {
+                        "data": "04/11/2022, 17:00:00",
+                        "tipo": "Coberta"
+                    },
+                    {
+                        "data": "04/11/2022, 19:00:00",
+                        "tipo": "Exterior"
+                    },
+                    {
+                        "data": "06/01/2023, 16:00:00",
+                        "tipo": "Exterior"
+                    },
+                    {
+                        "data": "25/01/2023, 15:00:00",
+                        "tipo": "Exterior"
+                    },
+                    {
+                        "data": "29/01/2023, 19:00:00",
+                        "tipo": "Coberta"
+                    },
+                    {
+                        "data": "02/02/2023, 16:00:00",
+                        "tipo": "Exterior"
+                    },
+                    {
+                        "data": "20/02/2023, 18:00:00",
+                        "tipo": "Exterior"
+                    },
+                    {
+                        "data": "22/02/2023, 15:00:00",
+                        "tipo": "Coberta"
+                    },
+                    {
+                        "data": "23/02/2023, 19:00:00",
+                        "tipo": "Exterior"
+                    }
+                ]
+        
+                                            </code></pre>
+                                            <p>
+                                                Si l'usuari no ha fet cap
+                                                reserva o l'id_usuari indicat no
+                                                existeix en la BBDD, s'obtè una
+                                                resposta buida:
+                                            </p>
+                                            <pre><code>[]</code></pre>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">POST</th>
+                                        <td>
+                                            <p>
+                                                Afegeix una reserva de l'usuari
+                                                amb l'id_usuari indicat a la
+                                                petició.
+                                            </p>
+                                            <pre><code>/gimnas/reserves/usuari/id_usuari</code></pre>
+                                            <p>
+                                                Cal indicar les dades de la
+                                                reserva en el format següent
+                                                (JSON):
+                                            </p>
+                                            <ul>
+                                                <li>
+                                                    "data": "YYYY-mm-dd
+                                                    HH:MM:SS"
+                                                </li>
+                                                <ul>
+                                                    <li>
+                                                        S'ha d'indicar una data
+                                                        correcta en el format
+                                                        YYYY-mm-dd
+                                                    </li>
+                                                    <li>
+                                                        Les hores possibles de
+                                                        reserva son
+                                                    </li>
+                                                    <ul>
+                                                        <li>
+                                                            De 15:00 a 16:00 ->
+                                                            15:00:00
+                                                        </li>
+                                                        <li>
+                                                            De 16:00 a 17:00 ->
+                                                            16:00:00
+                                                        </li>
+                                                        <li>
+                                                            De 17:00 a 18:00 ->
+                                                            17:00:00
+                                                        </li>
+                                                        <li>
+                                                            De 18:00 a 19:00 ->
+                                                            18:00:00
+                                                        </li>
+                                                        <li>
+                                                            De 19:00 a 20:00 ->
+                                                            19:00:00
+                                                        </li>
+                                                        <li>
+                                                            De 20:00 a 21:00 ->
+                                                            20:00:00
+                                                        </li>
+                                                    </ul>
+                                                    <li>
+                                                        En qualsevol cas la data
+                                                        i hora de la reserva ha
+                                                        de ser posterior a la
+                                                        data i hora actual
+                                                    </li>
+                                                </ul>
+                                                <li>
+                                                    "idpista": digit numeric (1
+                                                    - coberta, 2 - exterior)
+                                                </li>
+                                            </ul>
+                                            <br />
+                                            <p>Exemple:</p>
+                                            <pre><code>
+                {
+                    "data": "2023-02-09 16:00:00",
+                    "idpista": 1
+                }
+        
+                                            </code></pre>
+                                            <p>
+                                                Si hi ha disponibilitat, la
+                                                petició retorna totes les
+                                                reserves de l'usuari, incloent
+                                                la nova.
+                                            </p>
+                                            <p>
+                                                Si NO hi ha disponibilitat, la
+                                                petició retorna la resposta
+                                                següent:
+                                            </p>
+                                            <pre><code>"UNABLE TO REGISTER THE OPERATION (POST)"</code></pre>
+                                            <p>
+                                                Si s'introdueix una data
+                                                incorrecta, una hora incorrecta
+                                                o fora dels limits o una pista
+                                                incorrecta petició retorna la
+                                                resposta següent:
+                                            </p>
+                                            <pre><code>"UNABLE TO REGISTER THE OPERATION (POST)"</code></pre>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">DELETE</th>
+                                        <td>
+                                            <p>
+                                                Elimina una reserva de l'usuari
+                                                amb l'id_usuari indicat a la
+                                                petició.
+                                            </p>
+                                            <pre><code>/gimnas/reserves/usuari/id_usuari</code></pre>
+                                            <p>
+                                                Cal indicar les dades de la
+                                                reserva en el format següent
+                                                (JSON):
+                                            </p>
+                                            <ul>
+                                                <li>
+                                                    "data": "YYYY-mm-dd
+                                                    HH:MM:SS"
+                                                </li>
+                                                <ul>
+                                                    <li>
+                                                        S'ha d'indicar una data
+                                                        correcta en el format
+                                                        YYYY-mm-dd
+                                                    </li>
+                                                    <li>
+                                                        Les hores possibles de
+                                                        reserva son
+                                                    </li>
+                                                    <ul>
+                                                        <li>
+                                                            De 15:00 a 16:00 ->
+                                                            15:00:00
+                                                        </li>
+                                                        <li>
+                                                            De 16:00 a 17:00 ->
+                                                            16:00:00
+                                                        </li>
+                                                        <li>
+                                                            De 17:00 a 18:00 ->
+                                                            17:00:00
+                                                        </li>
+                                                        <li>
+                                                            De 18:00 a 19:00 ->
+                                                            18:00:00
+                                                        </li>
+                                                        <li>
+                                                            De 19:00 a 20:00 ->
+                                                            19:00:00
+                                                        </li>
+                                                        <li>
+                                                            De 20:00 a 21:00 ->
+                                                            20:00:00
+                                                        </li>
+                                                    </ul>
+                                                    <li>
+                                                        En qualsevol cas, només
+                                                        es poden eliminar
+                                                        reserves
+                                                        <strong
+                                                            >posteriors</strong
+                                                        >
+                                                        a la data i hora actual
+                                                    </li>
+                                                </ul>
+                                                <li>
+                                                    "idpista": digit numeric (1
+                                                    - coberta, 2 - exterior)
+                                                </li>
+                                            </ul>
+                                            <br />
+                                            <p>Exemple:</p>
+                                            <pre><code>
+                {
+                    "data": "2023-02-09 16:00:00",
+                    "idpista": 1
+                }
+        
+                                            </code></pre>
+                                            <p>
+                                                Si totes les dades introduïdes
+                                                son correctes, s'eliminara la
+                                                reserva. La petició retorna:
+                                            </p>
+                                            <pre><code>"RESERVA ELIMNADA"</code></pre>
+                                            <p>
+                                                Si les dades no compleixen els
+                                                requisits anteriors, no es
+                                                relaitzarà eliminació alguna. La
+                                                petició retorna la resposta
+                                                següent:
+                                            </p>
+                                            <pre><code>"UNABLE TO REGISTER THE OPERATION (DELETE)"</code></pre>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </li>
+                    </ul>
+                </ul>
+            </div>
+        </div>
+        <br />
+
+        <!-- Optional JavaScript -->
+        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        <script
+            src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+            integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+            crossorigin="anonymous"
+        ></script>
+        <script
+            src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+            integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+            crossorigin="anonymous"
+        ></script>
+        <script
+            src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+            integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+            crossorigin="anonymous"
+        ></script>
+    </body>
+</html>

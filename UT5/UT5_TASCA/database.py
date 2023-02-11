@@ -64,34 +64,62 @@ class gimnas(object):
             return('UNABLE TO REGISTER THE OPERATION')
 
 
+
+
     def tornaUsuariPerID(self, id_usuari):
-        sql = "SELECT id,username,email,nom,llinatges,telefon,diaalta FROM usuaris"
-        sql = sql + " WHERE id="+str(id_usuari)
-        print(sql)
+        # Comprovam que existeix ID
+        resultat_comprovacio=self.existeixIdUsuari(id_usuari)
+        if (resultat_comprovacio):
+            sql = "SELECT id,username,email,nom,llinatges,telefon,diaalta FROM usuaris"
+            sql = sql + " WHERE id="+str(id_usuari)
+            
+            self.cursor.execute(sql)
+            ResQuery=self.cursor.fetchone()
+            # Convertirm date object a string
+            ResQuery['diaalta']=ResQuery['diaalta'].strftime("%d/%m/%Y")
+            return ResQuery
+        else:
+            return('UNABLE TO PROCESS THE OPERATION (GET)')
+
+    def existeixIdUsuari(self, id_usuari):
+        sql="SELECT COUNT(id) FROM usuaris WHERE id="+str(id_usuari)
         self.cursor.execute(sql)
         ResQuery=self.cursor.fetchone()
-        # Convertirm date object a string
-        ResQuery['diaalta']=ResQuery['diaalta'].strftime("%d/%m/%Y")
-        return ResQuery
+        if(ResQuery['COUNT(id)']==1):
+            return True
+        else:
+            return False
+
 
     def modificaUsuari(self,id_usuari,camps):
-        # Si es modifica password, generam HASH
-        if camps['password']:
-            camps['password']=generate_password_hash(camps['password'])
-        
-        # Inserim modificacions
-        for canvi in camps:
-            sql = "UPDATE usuaris SET "+canvi+"='"+camps[canvi]+"' "
-            sql = sql +"WHERE id="+str(id_usuari)
-            self.cursor.execute(sql)
-        
-        # Retornam dades de l'usuari modificat
-        ResQuery=self.tornaUsuariPerID(id_usuari)
-        return ResQuery
+        # Comprovam que existeix ID
+        resultat_comprovacio=self.existeixIdUsuari(id_usuari)
+        if (resultat_comprovacio):
+            # Si es modifica password, generam HASH
+            if camps['password']:
+                camps['password']=generate_password_hash(camps['password'])
+            
+            # Inserim modificacions
+            for canvi in camps:
+                sql = "UPDATE usuaris SET "+canvi+"='"+camps[canvi]+"' "
+                sql = sql +"WHERE id="+str(id_usuari)
+                self.cursor.execute(sql)
+            
+            # Retornam dades de l'usuari modificat
+            ResQuery=self.tornaUsuariPerID(id_usuari)
+            return ResQuery
+        else:
+            return('UNABLE TO PROCESS THE OPERATION (PUT)')
 
     def eliminaUsuari(self, id_usuari):
-        sql = "DELETE FROM usuaris WHERE id="+str(id_usuari)
-        self.cursor.execute(sql)
+        # Comprovam que existeix ID
+        resultat_comprovacio=self.existeixIdUsuari(id_usuari)
+        if (resultat_comprovacio):
+            sql = "DELETE FROM usuaris WHERE id="+str(id_usuari)
+            self.cursor.execute(sql)
+            return('USER DELETED')
+        else:
+            return('UNABLE TO PROCESS THE OPERATION (DELETE)')
 
     def tornaReserves(self,dataInicial,dataFinal):
         sql="SELECT reserves.data,pistes.tipo,usuaris.username"
@@ -109,21 +137,24 @@ class gimnas(object):
     
     
     def tornaReservesSetmana(self,data):
-        # print('data:')
-        # print(type(data))
-        # print(data)
-
-        # Convertim data a objecte datetime
-        data_object=datetime.datetime.strptime(data,"%Y-%m-%d")
-        # print(type(data_object))
-        # print(data_object)
-
-        # Obtenim extrems inferior i superior de la setmana
-        extremsSetmana=self.tornaExtremsSetmana(data_object)
         
-        # Executam consulta
-        llistaReserves=self.tornaReserves(extremsSetmana[0],extremsSetmana[1])
-        return llistaReserves
+        # Convertim data a objecte datetime
+        # Si la data introduïda no es correcta strptime llança una errada,
+        # per la qual cosa farem servir try - except
+        try:
+            data_object=datetime.datetime.strptime(data,"%Y-%m-%d")
+            # print(type(data_object))
+            # print(data_object)
+
+            # Obtenim extrems inferior i superior de la setmana
+            extremsSetmana=self.tornaExtremsSetmana(data_object)
+            
+            # Executam consulta
+            llistaReserves=self.tornaReserves(extremsSetmana[0],extremsSetmana[1])
+            return llistaReserves
+        except ValueError:
+            return('UNABLE TO PROCESS THE OPERATION (GET)')
+            
 
         
     
@@ -182,30 +213,157 @@ class gimnas(object):
         # print(camps['idpista'])
         # print(type(camps['idpista']))
         
-        # Comprovam disponibilitat de la reserva
-        sql="SELECT data, idpista FROM reserves"
-        sql=sql+" WHERE data='"+camps['data']+"' "
-        sql=sql+" AND idpista="+str(camps['idpista'])
+        # Si la data-hora introduïda no es correcta strptime llança una errada,
+        # per la qual cosa farem servir try - except
+        try:
+            data_object=datetime.datetime.strptime(camps['data'],"%Y-%m-%d %H:%M:%S")
+            #print(type(data_object))
+            #print(data_object)
+            
+            # Comprovam validesa HORA RESERVA
+            
+            hora_reserva=datetime.datetime.time(data_object)
+            hora_reserva=hora_reserva.replace(minute=00)
+            hora_reserva=hora_reserva.replace(second=00)
+            # print(hora_reserva)
+            # print(type(hora_reserva))
+            hora_minima=datetime.time(15)
+            hora_maxima=datetime.time(20)
+            #print(hora_minima)
+            #print(hora_maxima)
+            if (hora_reserva>=hora_minima and hora_reserva<=hora_maxima):
+                
+                # Modificam camp['data'] passant minuts i segons a 0
+                data_object=data_object.replace(minute=00)
+                data_object=data_object.replace(second=00)
+                camps['data']=data_object.strftime("%Y-%m-%d %H:%M:%S")
+                # print(camps['data'])
+                
+                # Obtenim data-hora actual
+                                
+                dataHoraActual=self.tornaDataHoraActual()
+                # print(dataHoraActual)
+                
+                # Comprovam si idpista introduït és correcte
+                resultatComprovacioIdPista=self.comprovaIdPista(camps['idpista'])
+                    
+                # Comprovam si idusuari introduït és correcte
+                resultatComprovacioIdUsuari=self.existeixIdUsuari(id_usuari)
+                
+                # Comprovam disponibilitat de la reserva
+                reservaDisponible=self.tornaReservaDisponible(camps['data'],camps['idpista'])
+                
+                if (data_object>=dataHoraActual and resultatComprovacioIdPista and resultatComprovacioIdUsuari and reservaDisponible):
+
+                    sql="INSERT INTO reserves (data,idpista,idclient)"
+                    sql = sql + " values ('"+camps['data']+"',"+str(camps['idpista'])+","
+                    sql = sql + str(id_usuari)+")"
+                    # print(sql)
+                    self.cursor.execute(sql)
+
+                    # Retornam llistat de reserves fetes per l'usuari
+                    llistatReserves=self.tornaReservesUsuari(id_usuari)
+                    return llistatReserves
+
+                else:
+                    return('UNABLE TO REGISTER THE OPERATION (POST)')
+
+            else:
+                    return('UNABLE TO REGISTER THE OPERATION (POST)')
+
+        except ValueError:
+            
+            return('UNABLE TO REGISTER THE OPERATION (POST)')
+        
+        
+    def comprovaIdPista(self, idpista):
+        
+        sql="SELECT COUNT(idpista) FROM pistes WHERE idpista="+str(idpista)
         self.cursor.execute(sql)
         ResQuery=self.cursor.fetchone()
-        #print(ResQuery)
-        if (ResQuery==None):
-            sql="INSERT INTO reserves (data,idpista,idclient)"
-            sql = sql + " values ('"+camps['data']+"',"+str(camps['idpista'])+","
-            sql = sql + str(id_usuari)+")"
-            # print(sql)
-            self.cursor.execute(sql)
-
-            # Retornam llistat de reserves fetes per l'usuari
-            llistatReserves=self.tornaReservesUsuari(id_usuari)
-            return llistatReserves
-
+        if(ResQuery['COUNT(idpista)']==1):
+            return True
         else:
-            return('UNABLE TO REGISTER THE OPERATION')
+            return False
 
     def eliminaReservaUsuari(self, id_usuari, camps):
-        sql = "DELETE FROM reserves WHERE data='"+camps['data']+"'"
-        sql = sql + " AND idpista="+str(camps['idpista'])
-        sql = sql + " AND idclient="+str(id_usuari)
-        # print(sql)
+        # Consider que només es poden eliminar les reserves futures, 
+        # per la qual cosa cal comprovar que la reserva que es vol eliminar
+        # es posterior a la data-hora actual
+        
+        # Primer cal comprovar la validesa de la data-hora inserida
+        data_object=self.comprovaValidesaDataHora(camps['data'])
+        
+        if (data_object==False):
+            return('UNABLE TO REGISTER THE OPERATION (DELETE)')
+        else:
+            # Obtenim data-hora actual
+            dataHoraActual=self.tornaDataHoraActual()
+            
+            # Comprovam si idpista introduït és correcte
+            resultatComprovacioIdPista=self.comprovaIdPista(camps['idpista'])
+                    
+            # Comprovam si idusuari introduït és correcte
+            resultatComprovacioIdUsuari=self.existeixIdUsuari(id_usuari)
+            
+            # Comprovam si existeix la reserva que es vol anular
+            reservaExistent=self.tornaReservaExistent(camps['data'],
+                                                      camps['idpista'],
+                                                      id_usuari)
+            
+            if (data_object>=dataHoraActual and resultatComprovacioIdPista and resultatComprovacioIdUsuari and reservaExistent):
+
+                sql = "DELETE FROM reserves WHERE data='"+camps['data']+"'"
+                sql = sql + " AND idpista="+str(camps['idpista'])
+                sql = sql + " AND idclient="+str(id_usuari)
+                # print(sql)
+                self.cursor.execute(sql)
+                return('RESERVA ELIMINADA')
+        
+            else:
+                return('UNABLE TO REGISTER THE OPERATION (DELETE)')
+
+    def tornaReservaDisponible(self, dataHora, idpista):
+        sql="SELECT data, idpista FROM reserves"
+        sql=sql+" WHERE data='"+dataHora+"' "
+        sql=sql+" AND idpista="+str(idpista)
+        print(sql)
         self.cursor.execute(sql)
+        ResQuery=self.cursor.fetchone()
+        if(ResQuery==None):
+            return True
+        else:
+            return False
+    
+    
+    def comprovaValidesaDataHora(self, dataHora):
+        # Si la data-hora introduïda no es correcta strptime llança una errada,
+        # per la qual cosa farem servir try - except
+        try:
+            data_object=datetime.datetime.strptime(dataHora,"%Y-%m-%d %H:%M:%S")
+            return data_object
+            
+        except ValueError:
+            return False
+
+    def tornaDataHoraActual(self):
+        dataHoraActual= datetime.datetime.now()
+        dataHoraActual=dataHoraActual+datetime.timedelta(hours=1)
+        dataHoraActual=dataHoraActual.replace(minute=00)
+        dataHoraActual=dataHoraActual.replace(second=00)
+        dataHoraActual=dataHoraActual.replace(microsecond=00)
+        return dataHoraActual
+    
+    def tornaReservaExistent(self, dataHora, idpista, idusuari):
+        sql="SELECT data, idpista FROM reserves"
+        sql=sql+" WHERE data='"+dataHora+"' "
+        sql=sql+" AND idpista="+str(idpista)
+        sql=sql+" AND idclient="+str(idusuari)
+        print(sql)
+        self.cursor.execute(sql)
+        ResQuery=self.cursor.fetchone()
+        
+        if(ResQuery==None):
+            return False
+        else:
+            return True
