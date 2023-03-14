@@ -1,9 +1,6 @@
-from user import User
-import database
+import user
 
-mt = database.whatspau()
-
-users = mt.autenticaUsuari()
+users = user.tornaUsuaris()
 
 username_table = {u.username: u for u in users}
 userid_table = {u.id: u for u in users}
