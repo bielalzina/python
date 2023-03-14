@@ -1,0 +1,365 @@
+{
+	"info": {
+		"_postman_id": "38145f16-df98-4c16-9d59-bb4a79038ceb",
+		"name": "WHATSPAU",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "POST_AUTH",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\":\"Victoria\",\n    \"password\":\"12345\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/auth",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"auth"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET_USERS",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:5000/users",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET_MISSATGES",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:5000/usersNoAuth",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"usersNoAuth"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET_CHECK",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:5000/check",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"check"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET_CONVERSA",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:5000/conversa/3",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"conversa",
+						"3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST_NOU_MISSATGE",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2Nzg2MTQzMjgsImlhdCI6MTY3ODYxNDAyOCwibmJmIjoxNjc4NjE0MDI4LCJpZGVudGl0eSI6NH0.4BJJoM8YF5LE7RnztUHsTtBwmL0aT9Et6VJRg_uIvRY",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"text\": \"Faig una xiscla\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/conversa/3",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"conversa",
+						"3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT_CANVIA_STATUS_REBUT",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2Nzg2MTQzMjgsImlhdCI6MTY3ODYxNDAyOCwibmJmIjoxNjc4NjE0MDI4LCJpZGVudGl0eSI6NH0.4BJJoM8YF5LE7RnztUHsTtBwmL0aT9Et6VJRg_uIvRY",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"text\": \"Faig una xiscla\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/missatgesrebuts",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"missatgesrebuts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT_CANVIA_STATUS_LLEGIT",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2Nzg2MTQzMjgsImlhdCI6MTY3ODYxNDAyOCwibmJmIjoxNjc4NjE0MDI4LCJpZGVudGl0eSI6NH0.4BJJoM8YF5LE7RnztUHsTtBwmL0aT9Et6VJRg_uIvRY",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"text\": \"Faig una xiscla\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/missatgesllegits",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"missatgesllegits"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET_GRUPS",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:5000/grups",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"grups"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET_MEMBRES_GRUPS",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:5000/membresgrups",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"membresgrups"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET_MG_CHECK",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:5000/mgcheck",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"mgcheck"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET_CONVERSA_GRUP",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2Nzg4MjAwNDEsImlhdCI6MTY3ODgxOTc0MSwibmJmIjoxNjc4ODE5NzQxLCJpZGVudGl0eSI6MX0.l1rATXTskFaww3wpBOCvMUd9Ed-mpfhbhj3amBv9cOc",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "http://127.0.0.1:5000/conversagrup/2",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"conversagrup",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST_NOU_MISSATGE_GRUP",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2Nzg4MjAwNDEsImlhdCI6MTY3ODgxOTc0MSwibmJmIjoxNjc4ODE5NzQxLCJpZGVudGl0eSI6MX0.l1rATXTskFaww3wpBOCvMUd9Ed-mpfhbhj3amBv9cOc",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "http://127.0.0.1:5000/conversagrup/2",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"conversagrup",
+						"2"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
