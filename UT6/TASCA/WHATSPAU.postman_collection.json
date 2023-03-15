@@ -335,16 +335,25 @@
 		{
 			"name": "POST_NOU_MISSATGE_GRUP",
 			"request": {
-				"method": "GET",
+				"method": "POST",
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2Nzg4MjAwNDEsImlhdCI6MTY3ODgxOTc0MSwibmJmIjoxNjc4ODE5NzQxLCJpZGVudGl0eSI6MX0.l1rATXTskFaww3wpBOCvMUd9Ed-mpfhbhj3amBv9cOc",
+						"value": "JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2Nzg5MDQ4NjcsImlhdCI6MTY3ODkwNDU2NywibmJmIjoxNjc4OTA0NTY3LCJpZGVudGl0eSI6NH0.PTCYNBHOPVPjX4O6EQeRBVveC1fz04G8UkXPLPhMHAo",
 						"type": "default"
 					}
 				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"text\": \"A les vuit me va bé, ens veiem a l\\\\'Antonio BAR?\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
-					"raw": "http://127.0.0.1:5000/conversagrup/2",
+					"raw": "http://127.0.0.1:5000/conversagrup/1",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -355,7 +364,81 @@
 					"port": "5000",
 					"path": [
 						"conversagrup",
-						"2"
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT_CANVIA_GRUP_STATUS_REBUT",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2Nzg2MTQzMjgsImlhdCI6MTY3ODYxNDAyOCwibmJmIjoxNjc4NjE0MDI4LCJpZGVudGl0eSI6NH0.4BJJoM8YF5LE7RnztUHsTtBwmL0aT9Et6VJRg_uIvRY",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"text\": \"Faig una xiscla\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/missatgesrebuts",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"missatgesrebuts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT_CANVIA_GRUP_STATUS_LLEGIT",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2Nzg2MTQzMjgsImlhdCI6MTY3ODYxNDAyOCwibmJmIjoxNjc4NjE0MDI4LCJpZGVudGl0eSI6NH0.4BJJoM8YF5LE7RnztUHsTtBwmL0aT9Et6VJRg_uIvRY",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"text\": \"Faig una xiscla\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/missatgesllegits",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"missatgesllegits"
 					]
 				}
 			},

@@ -206,19 +206,79 @@ class whatspau(object):
             self.cursor.execute(sql)
             ResQuery=self.cursor.fetchone()
             if (ResQuery['COUNT(id_member)'] == 1):
-                return ('Anam be')
+                # AFEGIM MISSATGE A TAULA missatges_grup
+                sql = "INSERT INTO missatges_grup (id_missatge,data,missatge,"
+                sql = sql + "id_sender,id_receiver_grup)"
+                sql = sql + " VALUES (NULL, now(),'"+missatge['text']+"',"
+                sql = sql + "'"+str(idUserAut)+"','"+str(idGrup)+"')"
+                self.cursor.execute(sql)
+                
+                # ARA CAL ENVIAR EL MISSTAGE ALS MEMBRES DEL GRUP
+                # OBTENIM EL DARRER ID_MISSATGE ENVIAT PER L'USUARI AUTENTICAT
+                sql = "SELECT id_missatge FROM missatges_grup"
+                sql = sql + " WHERE id_sender='"+str(idUserAut)+"'"
+                sql = sql + " AND data = (SELECT MAX(data) FROM missatges_grup"
+                sql = sql + " WHERE id_sender ='"+str(idUserAut)+"')"
+                # print(sql)
+                self.cursor.execute(sql)
+                idMissatge = self.cursor.fetchone()
+                # print(idMissatge)
+                
+                # OBTENIM LES IDS DELS MEMBRES QUE INTEGREN EL GRUP EXCEPTE
+                # LA ID DEL USUARI AUTENTICAT
+                sql = "SELECT id_member FROM members_grup"
+                sql = sql + " WHERE id_member<>'"+str(idUserAut)+"'"
+                sql = sql + " AND id_grup='"+str(idGrup)+"'"
+                self.cursor.execute(sql)
+                idsMembers = self.cursor.fetchall()
+                #print(idsMembers)
+                #print(type(idsMembers))
+                for valor in idsMembers:
+                    idMembre= valor['id_member']
+                    # AFEGIM REGISTRES EN estat_misstages_grup
+                    sql = "INSERT INTO estat_missatges_grup"
+                    sql = sql + " (id_missatge,id_receiver,status)"
+                    sql = sql + " VALUES ('"+str(idMissatge['id_missatge'])+"',"
+                    sql = sql + "'"+str(idMembre)+"','send')"
+                    self.cursor.execute(sql)
+                return ('Missatge enviat amb èxit')
             else:
                 return ('Aquest usuari no pertaney a aquest grup de conversa')
         else:
             return ('Grup de conversa inexistent')
-            
-        """ sql = "INSERT INTO missatges (fecha, id_sender, id_receiver,"
-        sql = sql + " missatge, status)"
-        sql = sql + " VALUES (now(),'"+str(idUserAut)+"','"+str(idInterlocutor)+"',"
-        sql = sql + " '"+missatge['text']+"', 'send')"
+
+
+    def canviaGrupStatusRebut(self,idGrup,idUserAut):
+        sql = "UPDATE estat_missatges_grup"
+        sql = sql + " SET status='received'"
+        sql = sql + " WHERE id_missatge IN ("
+        sql = sql + "SELECT missatges_grup.id_missatge FROM missatges_grup"
+        sql = sql + " JOIN grups ON missatges_grup.id_receiver_grup=grups.id_grup"
+        sql = sql + " WHERE missatges_grup.id_receiver_grup='"+str(idGrup)+"'"
+        sql = sql + " AND missatges_grup.id_sender<>'"+str(idUserAut)+"')"
+        sql = sql + " AND status='send'"
+        sql = sql + " AND id_receiver='"+str(idUserAut)+"'"
+        #print(sql)
         # Executam sql mitjançant un try - except
         try:
             self.cursor.execute(sql)
-            return ('Missatge enviat amb èxit')
+            return ('Status modificat a REBUT')
         except:
-            return ('Missatge NO enviat') """
+            return ('Status NO modificat')
+        
+    def canviaGrupStatusLlegit(self,idGrup,idUserAut):
+        sql = "UPDATE estat_missatges_grup"
+        sql = sql + " SET status='read'"
+        sql = sql + " WHERE id_missatge IN ("
+        sql = sql + "SELECT missatges_grup.id_missatge FROM missatges_grup"
+        sql = sql + " JOIN grups ON missatges_grup.id_receiver_grup=grups.id_grup"
+        sql = sql + " WHERE missatges_grup.id_receiver_grup='"+str(idGrup)+"'"
+        sql = sql + " AND missatges_grup.id_sender<>'"+str(idUserAut)+"')"
+        sql = sql + " AND status='received'"
+        sql = sql + " AND id_receiver='"+str(idUserAut)+"'"
+        # Executam sql mitjançant un try - except
+        try:
+            self.cursor.execute(sql)
+            return ('Status modificat a LLEGIT')
+        except:
+            return ('Status NO modificat')

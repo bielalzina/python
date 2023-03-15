@@ -143,6 +143,23 @@ class conversagrup(Resource):
         return resultat
 
 
+class mgrebuts(Resource):
+    @jwt_required()
+    def put(self, id_grup):
+        mt.conecta()
+        resultat = mt.canviaGrupStatusRebut(id_grup,current_identity.id)
+        mt.desconecta()
+        return resultat
+    
+class mgllegits(Resource):
+    @jwt_required()
+    def put(self, id_grup):
+        mt.conecta()
+        resultat = mt.canviaGrupStatusLlegit(id_grup,current_identity.id)
+        mt.desconecta()
+        return resultat
+
+
 # GET (retorna els grups al qual pertany l'usuari autenticat)
 api.add_resource(grups, '/grups')
 
@@ -156,6 +173,15 @@ api.add_resource(mgcheck, '/mgcheck')
 # GET (retorna tots els missatges del grup)
 # POST (envia un missatge a un grup de conversa)
 api.add_resource(conversagrup, '/conversagrup/<int:id_grup>')
+
+# PUT (canvia l'status dels missatges enviats a l'usuari autenticat,
+#      de 'send' a 'received' en el grup de conversa indicat)
+api.add_resource(mgrebuts, '/mgrebuts/<int:id_grup>')
+
+# PUT (canvia l'status dels missatges rebuts per l'usuari autenticat,
+#      de 'received' a 'read' en el grup de conversa indicat)
+api.add_resource(mgllegits, '/mgllegits/<int:id_grup>')
+
 
 if __name__ == '__main__':
     app.run(debug=True)
