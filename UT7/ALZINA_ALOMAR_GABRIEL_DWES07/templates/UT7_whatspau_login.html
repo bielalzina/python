@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, shrink-to-fit=no"
+        />
+        <!-- Bootstrap CSS -->
+        <link
+            rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+            integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
+            crossorigin="anonymous"
+        />
+        <title>UT7_Whatspau_Client</title>
+    </head>
+    <body>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3">
+                    <img src="../static/whatspau_logo.png" alt="LOGO" />
+                </div>
+                <div class="col-md-6">
+                    <div class="jumbotron">
+                        <h1>UT7 WHATSPAU CLIENT</h1>
+                        <p>CLIENT QUE ES CONNECTA A LA API WHATSPAU</p>
+                        <hr class="my-4" />
+
+                        <form
+                            class="navbar-form navbar-right"
+                            role="form"
+                            action="{{url_for('login')}}"
+                            method="post"
+                        >
+                            <div class="form-group">
+                                <input
+                                    type="text"
+                                    placeholder="Usuari"
+                                    class="form-control"
+                                    name="usuari"
+                                    id="usuari"
+                                    size="15"
+                                />
+                            </div>
+                            <div class="form-group">
+                                <input
+                                    type="password"
+                                    placeholder="Password"
+                                    class="form-control"
+                                    name="password"
+                                    id="password"
+                                    size="15"
+                                />
+                            </div>
+                            <button type="submit" class="btn btn-success">
+                                SIGN IN
+                            </button>
+                        </form>
+                        {% if loginmsg %}
+                        <br />
+
+                        <div class="alert alert-warning" role="alert">
+                            {{loginmsg}}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
