@@ -39,9 +39,12 @@ function carregaConversaPerContacte(idUserGrup) {
             conversa = json;
             //console.log(conversa);
 
-            //RECUPERAM MISSATGES DE LA CONVERSA
+            // RECUPERAM MISSATGES DE LA CONVERSA
+            // FORMATATS EN HTML
             var str = pintaConversa(username, idContacte, conversa);
             document.getElementById("missatgesSection").innerHTML = str;
+            // FEIM SCROLL A TOP PÀGINA
+            window.scrollTo(0, 0);
 
             //CANVIAM STATUS DELS MISSATGES REBUTS EN LA CONVERSA A LLEGITS
             canviaStatusToRead(conversa, idContacte);
@@ -61,19 +64,24 @@ function carregaConversaPerContacte(idUserGrup) {
         let groupName = document.getElementById(idUserGrup).innerText;
         //console.log(groupName);
 
-        // DEFINIM URL
-        url = serverAPI + "/missatgesgrup/" + idContacte;
+        //RECUPERAM MISSATGES DE LA CONVERSA DEL GRUP
 
-        var aj1 = $.ajax({
-            url: url,
-            type: "GET",
-            dataType: "json",
-            headers: { Authorization: token },
-        }).done(function (json) {
-            conversaGrup = json;
+        var settings = {
+            url:
+                "http://87.235.201.250:8080/whatspau_php/missatgesgrup/" +
+                idContacte,
+            method: "GET",
+            timeout: 0,
+            headers: {
+                Authorization: token,
+            },
+        };
+
+        $.ajax(settings).done(function (response) {
+            conversaGrup = response;
             //console.log(conversaGrup);
 
-            //PINTAM LA CONVERSA DEL GRUPRECUPERAM MISSATGES DE LA CONVERSA
+            //PINTAM LA CONVERSA DEL GRUP RECUPERAM MISSATGES DE LA CONVERSA
             pintaConversaGrup(groupName, idContacte, conversaGrup);
         });
     }
@@ -94,8 +102,10 @@ function pintaConversa(username, idContacte, conversa) {
 
     for (var i = 0; i < conversa.length; i++) {
         if (conversa[i].id_receiver == idContacte) {
+            // MISSATGES ENVIATS
             str +=
                 "<div class='col-sm-9 offset-sm-3 shadow-sm p-2 mb-4 rounded' style='background-color: rgba(217, 253, 211, 1)'>";
+
             str += "<p class='text-right mr-3 mb-2'>";
             str += conversa[i].missatge;
             str += "</p>";
@@ -115,6 +125,7 @@ function pintaConversa(username, idContacte, conversa) {
             str += "</p>";
             str += "</div>";
         } else {
+            // MISSTAGES REBUTS
             str += "<div class='col-sm-9 shadow-sm p-2 mb-4 bg-white rounded'>";
             str += "<p class='text-left mb-2'>";
             str += conversa[i].missatge;
@@ -197,15 +208,15 @@ function canviaStatusToRead(conversa, idContacte) {
     }
 }
 
+//FUNCIO QUE ENVIA UN MISSATGE A UN AMIC (idContacte)
+
 function enviaMissatge(idContacte) {
     //console.log(idContacte);
-
     // Capturam missatge
     var nouMissatge = document.getElementById("missatgeNou").value;
     //console.log(nouMissatge);
 
     // ENVIAM POST A L'API
-
     var settings = {
         url: "http://87.235.201.250:8080/whatspau_php/missatges/" + idContacte,
         method: "POST",
@@ -218,15 +229,21 @@ function enviaMissatge(idContacte) {
             texte: nouMissatge,
         }),
     };
+    //console.log(settings);
 
     $.ajax(settings).done(function (response) {
         //console.log(response);
+        $.jGrowl("MISSATGE ENVIAT!!!", {
+            life: 2000,
+        });
+
         // TORNAM CARREGAR LA CONVERSA AMB L'USUARI
         idContacte = "amic-" + idContacte;
         carregaConversaPerContacte(idContacte);
     });
 }
 
+// FUNCIÓ QUE PINTA LA CONVERSA DEL GRUP SELECCIONAT
 function pintaConversaGrup(groupName, idContacte, conversaGrup) {
     // RECUPERAM IDs I USERNAMES DLES USUARIS PER INDICAR QUI HA ENVIAT EL
     // MISSATGE EN ELS MISSATGES REBUTS EN CONVERSA GRUP
@@ -317,9 +334,12 @@ function pintaConversaGrup(groupName, idContacte, conversaGrup) {
         str += "</div>";
 
         document.getElementById("missatgesSection").innerHTML = str;
+        // FEIM SCROLL A TOP PÀGINA
+        window.scrollTo(0, 0);
     });
 }
 
+// FUNCIO QUE RETORNA NOM USUARI A PARTIR DEL SEU ID
 function retornaUsernameById(id, usuarisLlista) {
     var nomAmic = null;
     for (let i = 0; i < usuarisLlista.length; i++) {
@@ -330,6 +350,7 @@ function retornaUsernameById(id, usuarisLlista) {
     return nomAmic;
 }
 
+// FUNCIÓ QUE ENVIA MISSATGE A LA CONVERSA DEL GRUP
 function enviaMissatgeGrup(idContacte) {
     //console.log(idContacte);
 
@@ -356,11 +377,16 @@ function enviaMissatgeGrup(idContacte) {
 
     $.ajax(settings).done(function (response) {
         //console.log(response);
+        $.jGrowl("MISSATGE ENVIAT!!!", {
+            life: 2000,
+        });
         // TORNAM CARREGAR LA CONVERSA AMB L'USUARI
         idContacte = "grup-" + idContacte;
         carregaConversaPerContacte(idContacte);
     });
 }
+
+// FUNCIÓ QUE CARREGA EL FORMULARI PER CREAR UN GRUP
 
 function carregaFormCreaGrup() {
     // RECUPERAM IDs I USERNAMES DELS USUARIS PER PASSAR-LOS A FORM
@@ -429,10 +455,18 @@ function carregaFormCreaGrup() {
     });
 }
 
+// FUNCIÓ QUE CREA EL GRUP
+
 function creaGrup() {
     // CAPTURAM VALORS DEL FORM
     var nomGrup = document.getElementById("nomGrup").value;
     //console.log(nomGrup);
+    // EL NOM DEL GRUP NO POT COMENÇAR AMB UN ESPAI
+    // POT ESTAR FORMAT PER LLETRES, NUMEROS
+    // PERMET ESPAIS (EXCEPTE 1a POSICIÓ)
+    // LONGITUD MINIMA = 3
+    // COMPROVAM AQUSTES CONDICIONS AMB UN EXPRESSIÓ REGULAR = /^[^\s][a-zA-Z0-9\s]{2,}$/g
+
     var comprovacioNomGrup = nomGrup.match(/^[^\s][a-zA-Z0-9\s]{2,}$/g);
     //console.log(comprovacioNomGrup);
     if (comprovacioNomGrup != null) {
@@ -443,9 +477,9 @@ function creaGrup() {
                 seleccionats.push(option.value);
             }
         }
+        // COM A MINIM, S'HA DE SELECCIONAR UN MEMBRE
         if (seleccionats.length > 0) {
             //Convertim valors array seleccionats a int
-
             //console.log(seleccionats);
             var membresSeleccionats = [];
             seleccionats.forEach((id) =>
@@ -453,6 +487,7 @@ function creaGrup() {
             );
             //console.log(membresSeleccionats);
 
+            // CREAM GRUP
             var settings = {
                 url: "http://87.235.201.250:8080/whatspau_php/grups",
                 method: "POST",
@@ -469,7 +504,6 @@ function creaGrup() {
 
             $.ajax(settings).done(function (response) {
                 //console.log(response);
-
                 $.jGrowl(
                     "S'HA CREAT EL GRUP " +
                         nomGrup +
@@ -484,11 +518,13 @@ function creaGrup() {
                 location.reload();
             });
         } else {
+            // NO S'HA SELECCIONAT CAP USUARI
             $.jGrowl("HAS DE SELECCIONAR UN MEMBRE COM A MÍNIM!!!", {
                 sticky: true,
             });
         }
     } else {
+        // EL NOM DEL GRUP NO COMPLEIX CONDICIONS
         $.jGrowl("EL NOM DEL GRUP QUE HAS INTRODUÏT NO ÉS VÀLID!", {
             sticky: true,
         });
@@ -501,13 +537,16 @@ function creaGrup() {
 
 var dateTimeAnterior = new Date();
 
+// EXECUTAM 1a COMPROVACIÓ ALS 60 SEGONS D'HAVER CARREGAT PÀGINA
 window.addEventListener("load", function () {
     setTimeout(function () {
         comprovaMissatgesNous(dateTimeAnterior);
     }, 60000);
 });
 
+// FUNCIÓ QUE COMPROVA SI HI HA MISSATGES NOUS
 function comprovaMissatgesNous(dateTimeAnterior) {
+    // RECUPERAM MISSATGES AMB STATUS "SEND"
     var settings = {
         url: "http://87.235.201.250:8080/whatspau_php/missatges",
         method: "GET",
@@ -518,17 +557,26 @@ function comprovaMissatgesNous(dateTimeAnterior) {
     };
 
     $.ajax(settings).done(function (response) {
+        // OBTENIM DATETIME REQUEST ACTUAL
         const dateTimeActual = new Date();
 
         if (response.length > 0) {
+            // HI HA MISSATGES NOUS
             var missatgesNous = [];
             for (let i = 0; i < response.length; i++) {
+                // NOMÉS ENS INTERESSEN ELS MISSATGES ENVIATS AMB POSTERIORITAT
+                // A LA COMPROVACIÓ ANTERIOR
+                // PER COMPARAR VALOR, CONVERTIM fecha DEL MISSTAGE A
+                // OBJECTE DATE-TIME
+
                 var dateTimeMissatge = strToDateObject(response[i].fecha);
                 if (dateTimeMissatge > dateTimeAnterior) {
+                    // INCORPORAM MISSATGES A ARRAY
                     missatgesNous.push(response[i]);
                 }
             }
 
+            // SI HI HA MISSATGES NOUS QUE COMPLEIXEN CONDICIÓ ANTERIOR
             if (missatgesNous.length > 0) {
                 // RECUPERAM USERS
                 var settings = {
@@ -548,6 +596,7 @@ function comprovaMissatgesNous(dateTimeAnterior) {
                             missatgesNous[i].id_sender,
                             users
                         );
+                        // PREPARAM AVÍS PER A L'USUARI
                         const [dateStr, timeStr] =
                             missatgesNous[i].fecha.split(" ");
                         str += "<p> Tens un missatge nou de ";
@@ -555,12 +604,17 @@ function comprovaMissatgesNous(dateTimeAnterior) {
                         str += nomSender;
                         str += "</strong>. Enviat a les " + timeStr;
                         str += "</p>";
-                        //ACTUALITZAM CONTADOR
+                        //ACTUALITZAM CONTADOR MISSATGES NOUS
                         var idTag =
                             "numNous-amic-" + missatgesNous[i].id_sender;
                         var tag = document.getElementById(idTag);
                         var valorTag = tag.innerHTML;
-                        valorTag = parseInt(valorTag);
+                        if (valorTag == "--") {
+                            valorTag = 0;
+                            tag.classList.add("table-success");
+                        } else {
+                            valorTag = parseInt(valorTag);
+                        }
                         valorTag = valorTag + 1;
                         tag.innerHTML = valorTag;
                     }
@@ -572,37 +626,14 @@ function comprovaMissatgesNous(dateTimeAnterior) {
             }
         }
 
+        // TORNAM A CRIDAR FUNCIÓ AMB DATETIME DARRERA COMPROVACIÓ
         setTimeout(function () {
             comprovaMissatgesNous(dateTimeActual);
         }, 60000);
     });
 }
 
-/*
-function formataDataHora(ara) {
-    const dia = String(ara.getDate()).padStart(2, "0");
-    const mes = String(ara.getMonth() + 1).padStart(2, "0");
-    const any = ara.getFullYear();
-    const hora = String(ara.getHours()).padStart(2, "0");
-    const minuts = String(ara.getMinutes()).padStart(2, "0");
-    const segons = String(ara.getSeconds()).padStart(2, "0");
-
-    const dataFormatada =
-        dia +
-        "/" +
-        mes +
-        "/" +
-        any +
-        " - " +
-        hora +
-        ":" +
-        minuts +
-        ":" +
-        segons;
-    return dataFormatada;
-}
-*/
-
+// FUNCIÓ QUE CONVERTEIX DATA STRING A DATA OBJECT
 function strToDateObject(dateString) {
     const [dateStr, timeStr] = dateString.split(" ");
 
@@ -612,14 +643,3 @@ function strToDateObject(dateString) {
     const date = new Date(+year, +month - 1, +day, +hours, +minutes, +seconds);
     return date;
 }
-
-/*
-function mostraAvisMissatgesNous(str) {
-    var w = window.open("", "", "width=100,height=100");
-    w.document.write(str);
-    w.focus();
-    setTimeout(function () {
-        w.close();
-    }, 2000);
-}
-*/
