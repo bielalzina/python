@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, shrink-to-fit=no"
+        />
+
+        <!-- Bootstrap CSS -->
+        <link
+            rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+            integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
+            crossorigin="anonymous"
+        />
+
+        <title>Tasca DWES2 - Gimnàs</title>
+    </head>
+    <body>
+        <h1>TASCA DWES - GIMNAS</h1>
+        <div class="alert alert-secondary" role="alert">
+            <div class="row">
+                <div class="col-sm-2">
+                    <form action="{{url_for('formulari')}}" method="get">
+                        <button type="submit" class="btn btn-primary">
+                            RESERVAR PISTA
+                        </button>
+                    </form>
+                </div>
+                <div class="col-sm-2">
+                    <form action="{{url_for('reserves')}}" method="get">
+                        <button type="submit" class="btn btn-primary">
+                            VEURE RESERVES
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% if alerta %}
+        <div class="alert alert-danger">{{alerta}}</div>
+        {% endif %}
+
+        <div class="row">
+            <div class="col-sm-4">
+                <form
+                    name="reserva"
+                    action="{{url_for('reservar')}}"
+                    method="get"
+                >
+                    <h2>RESERVAR PISTA</h2>
+                    <p>
+                        <label for="dia">DIA:</label>
+                        <select class="form-select" name="dia" id="dia">
+                            <option value="1">DILLUNS</option>
+                            <option value="2">DIMARTS</option>
+                            <option value="3">DIMECRES</option>
+                            <option value="4">DIJOUS</option>
+                            <option value="5">DIVENDRES</option>
+                        </select>
+                    </p>
+                    <p>
+                        <label for="hora">HORA:</label>
+                        <input
+                            type="number"
+                            step="1"
+                            max="20"
+                            min="15"
+                            name="hora"
+                            id="hora"
+                            required
+                        />
+                    </p>
+
+                    <div class="form-check form-check-inline">
+                        <input
+                            type="radio"
+                            class="form-check-input"
+                            name="tipopista"
+                            id="tipopista1"
+                            value="exterior"
+                        />
+                        <label class="form-check-label" for="tipopista1"
+                            >EXTERIOR</label
+                        >
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input
+                            type="radio"
+                            class="form-check-input"
+                            name="tipopista"
+                            id="tipopista2"
+                            value="coberta"
+                        />
+                        <label class="form-check-label" for="tipopista2"
+                            >COBERTA</label
+                        >
+                    </div>
+                    <h2>DADES PERSONALS</h2>
+                    <p>
+                        <label for="nom">NOM i LLINATGES:</label>
+                        <input type="text" name="nom" id="nom" />
+                    </p>
+                    <p>
+                        <label for="telefon">TELEFON:</label>
+                        <input type="text" name="telefon" id="telefon" />
+                    </p>
+                    <div style="text-align: center">
+                        <input
+                            type="submit"
+                            value="Enviar"
+                            name="enviar"
+                            style="
+                                margin-right: 5px;
+                                width: 60px;
+                                height: 30px;
+                                font-weight: bold;
+                            "
+                        />
+                        <input
+                            type="reset"
+                            value="Limpiar"
+                            style="width: 70px; height: 30px; font-weight: bold"
+                        />
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- Optional JavaScript -->
+        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        <script
+            src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+            integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+            crossorigin="anonymous"
+        ></script>
+        <script
+            src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+            integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+            crossorigin="anonymous"
+        ></script>
+        <script
+            src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+            integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+            crossorigin="anonymous"
+        ></script>
+    </body>
+</html>
