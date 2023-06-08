@@ -19,16 +19,16 @@
         <title>Tasca DWES3 - Gimnàs amb mySQL</title>
     </head>
     <body>
-        <h1>TASCA DWES3 - GIMNAS AMB MYSQL</h1>
+        <h1>Tasca DWES3 - Gimnàs amb mySQL</h1>
         <div class="alert alert-secondary" role="alert">
             <div class="row">
                 <div class="col-sm-2">
                     <form
                         name="canviPantalla"
-                        method="get"
+                        method="GET"
                         action="{{url_for('formulariReserva')}}"
                     >
-                        <button type="submit" class="btn btn-light">
+                        <button type="submit" class="btn btn-primary">
                             RESERVAR PISTA
                         </button>
                     </form>
@@ -36,16 +36,16 @@
                 <div class="col-sm-2">
                     <form
                         name="canviPantalla"
-                        method="get"
+                        method="GET"
                         action="{{url_for('reserves')}}"
                     >
-                        <button type="submit" class="btn btn-primary">
+                        <button type="submit" class="btn btn-light">
                             VEURE RESERVES
                         </button>
                     </form>
                 </div>
                 <div class="col-sm-2">
-                    <form name="canviPantalla" method="get" action="#">
+                    <form name="canviPantalla" method="GET" action="#">
                         <button type="submit" class="btn btn-light">
                             USUARIS
                         </button>
@@ -53,53 +53,73 @@
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-sm-8">
-                <div class="alert alert-primary" role="alert">
-                    <div class="row">
-                        <div class="col-sm-2">
-                            <a href="{{url_for('setmanaMenys')}}"
-                                ><img src="/static/left.png" alt=""
-                            /></a>
-                        </div>
-                        <div class="col-sm-8">
-                            <h2>
-                                RESERVES SETMANA {{session['dilluns']}} a
-                                {{session['divendres']}}
-                            </h2>
-                        </div>
-                        <div class="col-sm-2">
-                            <a href="{{url_for('setmanaMes')}}"
-                                ><img src="/static/right.png" alt=""
-                            /></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="table-reponsive">
-                    <table
-                        id="llistaReserve"
-                        class="table table-bordered table-hover table-stripped"
-                    >
-                        <thead class="thead-light">
-                            <th></th>
-                            <th>DILLUNS</th>
-                            <th>DIMARTS</th>
-                            <th>DIMECRES</th>
-                            <th>DIJOUS</th>
-                            <th>DIVENDRES</th>
-                        </thead>
-                        {% for registres in range(0,6) %}
-                        <tr>
-                            <th>{{registres+15}}</th>
-                            {% for camps in range(0,5) %}
-                            <td>{{valors[camps][registres]}}</td>
-                            {% endfor %}
-                        </tr>
-                        {% endfor %}
-                    </table>
-                </div>
+        {% if alerta %}
+        <div class="alert alert-danger" role="danger">{{alerta}}</div>
+        {% endif %}
+
+        <form name="reserva" method="get" action="{{url_for('reservar')}}">
+            <h2>RESERVA PISTA</h2>
+            <h3>DATA i HORA</h3>
+            <p>
+                <label for="dia">DIA</label>
+                <input
+                    type="date"
+                    id="dia"
+                    name="dia"
+                    value="{{avui}}"
+                    required
+                />
+            </p>
+            <p>
+                <label for="hora">HORA</label>
+                <input
+                    type="number"
+                    id="hora"
+                    name="hora"
+                    step="1"
+                    max="20"
+                    min="15"
+                    required
+                />
+            </p>
+            <h3>TIPUS PISTA</h3>
+            <p>
+                <select class="form-select" name="tipopista" id="tipopista">
+                    <option value="1">COBERTA - 12€</option>
+                    <option value="2">EXTERIOR - 10€</option>
+                </select>
+            </p>
+
+            <h3>CLIENT</h3>
+
+            <p>
+                <select class="form-select" name="usuari" id="usuari">
+                    {% for u in usuaris %}
+                    <option value="{{u['idclient']}}">
+                        {{u['nom']+" "+u['llinatges']}}
+                    </option>
+                    {% endfor %}
+                </select>
+            </p>
+            <div style="text-align: left">
+                <input
+                    type="submit"
+                    value="ENVIA"
+                    name="enviar"
+                    style="
+                        margin-right: 5px;
+                        width: 80px;
+                        height: 30px;
+                        font-weight: bold;
+                    "
+                />
+                <input
+                    type="reset"
+                    value="ESBORRA"
+                    style="width: 100px; height: 30px; font-weight: bold"
+                />
             </div>
-        </div>
+        </form>
         <!-- Optional JavaScript -->
         <!-- jQuery first, then Popper.js, then Bootstrap JS -->
         <script
