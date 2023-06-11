@@ -19,7 +19,7 @@
         <title>Tasca DWES3 - Gimnàs amb mySQL</title>
     </head>
     <body>
-        <h1>Tasca DWES3 - Gimnàs amb mySQL</h1>
+        <h1>TASCA DWES3 - GIMNAS AMB MYSQL</h1>
         <div class="alert alert-secondary" role="alert">
             <div class="row">
                 <div class="col-sm-2">
@@ -45,7 +45,11 @@
                     </form>
                 </div>
                 <div class="col-sm-2">
-                    <form name="canviPantalla" method="GET" action="#">
+                    <form
+                        name="canviPantalla"
+                        method="GET"
+                        action="{{url_for('usuaris')}}"
+                    >
                         <button type="submit" class="btn btn-light">
                             USUARIS
                         </button>

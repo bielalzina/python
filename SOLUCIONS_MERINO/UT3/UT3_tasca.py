@@ -141,6 +141,11 @@ def reservar():
     if resultatComprovacio == 0:
         dataHora = dia+" "+str(hora)+":00:00"
         gimnas.reservaPista(dataHora, tipopista, idusuari)
+        # print(dia)
+        dataOBJ = datetime.datetime.strptime(dia, '%Y-%m-%d')
+        # OBTENIM DATA DILLUNS A PARTIR DE LA DATA ANTERIOR
+        dillunsOBJ = dataOBJ-datetime.timedelta(days=dataOBJ.weekday())
+        session['dilluns'] = datetimeToStrDMY(dillunsOBJ)
 
         llistaRes = gimnas.carregaReserves(session['dilluns'])
         arrayReserves = taulaPistes(llistaRes)
@@ -156,6 +161,72 @@ def reservar():
                                usuaris=llistaUsuaris,
                                avui=avuiSTR,
                                alerta=resultatComprovacio)
+
+
+@app.route('/usuaris')
+def usuaris():
+    llistaUsuaris = gimnas.carregaUsuaris()
+    # print(llistaUsuaris)
+    # print(len(llistaUsuaris))
+    for a in range(0, len(llistaUsuaris)):
+        llistaUsuaris[a]['actualitza'] = 0
+    # print(llistaUsuaris)
+
+    return render_template('UT3_tasca_usuaris.html', usuaris=llistaUsuaris)
+
+
+@app.route('/afegeixUsuari')
+def afegeixUsuari():
+    nouIdUsuari = gimnas.nouIdUsuari()
+    llistaUsuaris = gimnas.carregaUsuaris()
+    # print(llistaUsuaris)
+    # print(len(llistaUsuaris))
+    for a in range(0, len(llistaUsuaris)):
+        llistaUsuaris[a]['actualitza'] = 0
+    llistaUsuaris.append({'idclient': nouIdUsuari, 'actualitza': 1})
+    print(llistaUsuaris)
+    return render_template('UT3_tasca_usuaris.html', usuaris=llistaUsuaris)
+
+
+@app.route('/desaUsuari')
+def desaUsuari():
+    idusuari = request.args.get('idclient')
+    nom = request.args.get('nom')
+    llinatges = request.args.get('llinatges')
+    telefon = request.args.get('telefon')
+    gimnas.modificaUsuari(idusuari, nom, llinatges, telefon)
+    llistaUsuaris = gimnas.carregaUsuaris()
+    # print(llistaUsuaris)
+    # print(len(llistaUsuaris))
+    for a in range(0, len(llistaUsuaris)):
+        llistaUsuaris[a]['actualitza'] = 0
+    # print(llistaUsuaris)
+    return render_template('UT3_tasca_usuaris.html', usuaris=llistaUsuaris)
+
+
+@app.route('/esborraUsuari')
+def esborraUsuari():
+    idusuari = request.args.get('idclient')
+    gimnas.esborraUsuari(idusuari)
+    llistaUsuaris = gimnas.carregaUsuaris()
+    for a in range(0, len(llistaUsuaris)):
+        llistaUsuaris[a]['actualitza'] = 0
+    return render_template('UT3_tasca_usuaris.html', usuaris=llistaUsuaris)
+
+
+@app.route('/editaUsuari')
+def editaUsuari():
+    idusuari = request.args.get('idclient')
+    # print(type(idusuari))
+    # print(idusuari)
+    llistaUsuaris = gimnas.carregaUsuaris()
+    for a in range(0, len(llistaUsuaris)):
+        # print(type(llistaUsuaris[a]['idclient']))
+        if idusuari == str(llistaUsuaris[a]['idclient']):
+            llistaUsuaris[a]['actualitza'] = 1
+        else:
+            llistaUsuaris[a]['actualitza'] = 0
+    return render_template('UT3_tasca_usuaris.html', usuaris=llistaUsuaris)
 
 
 if __name__ == '__main__':

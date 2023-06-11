@@ -45,7 +45,11 @@
                     </form>
                 </div>
                 <div class="col-sm-2">
-                    <form name="canviPantalla" method="get" action="#">
+                    <form
+                        name="canviPantalla"
+                        method="get"
+                        action="{{url_for('usuaris')}}"
+                    >
                         <button type="submit" class="btn btn-light">
                             USUARIS
                         </button>

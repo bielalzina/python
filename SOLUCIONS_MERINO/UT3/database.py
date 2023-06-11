@@ -61,10 +61,10 @@ class gimnas (object):
         sql = sql + "WHERE r.idpista=p.idpista AND r.idclient=c.idclient "
         sql = sql + "AND r.data>='"+iniciStr+"' "
         sql = sql + "AND r.data<='"+finalStr+"';"
-        print(sql)
+        # print(sql)
         cursor.execute(sql)
         ResQuery = cursor.fetchall()
-        print(ResQuery)
+        # print(ResQuery)
         db.close()
         return ResQuery
 
@@ -102,4 +102,57 @@ class gimnas (object):
         print(sql)
         cursor.execute(sql)
         ResQuery = cursor.fetchall()
+        db.close()
+
+    def nouIdUsuari():
+        # CONNEXIO A BBDD
+        db = pymysql.connect(host='localhost',
+                             user='root',
+                             db='gimnas2',
+                             charset='utf8mb4',
+                             autocommit=True,
+                             cursorclass=pymysql.cursors.DictCursor)
+        cursor = db.cursor()
+        sql = "SELECT MAX(idclient)+1 nouId FROM clients;"
+        cursor.execute(sql)
+        ResQuery = cursor.fetchone()
+        db.close()
+        return ResQuery['nouId']
+
+    def modificaUsuari(idusuari, nom, llinatges, telefon):
+        # CONNEXIO A BBDD
+        db = pymysql.connect(host='localhost',
+                             user='root',
+                             db='gimnas2',
+                             charset='utf8mb4',
+                             autocommit=True,
+                             cursorclass=pymysql.cursors.DictCursor)
+        cursor = db.cursor()
+        sql = "SELECT COUNT(*) existeix FROM clients WHERE idclient=" + \
+            idusuari+";"
+        cursor.execute(sql)
+        ResQuery = cursor.fetchone()
+        if ResQuery['existeix'] == 1:
+            sql = "UPDATE clients SET nom='"+nom+"', llinatges='"+llinatges+"', "
+            sql = sql + "telefon='"+str(telefon)+"' "
+            sql = sql + "WHERE idclient="+idusuari+";"
+        else:
+            sql = "INSERT INTO clients "
+            sql = sql + "VALUES ("+idusuari+", '"+nom+"', '" + \
+                llinatges+"', '"+str(telefon)+"');"
+        # print(sql)
+        cursor.execute(sql)
+        db.close()
+
+    def esborraUsuari(idusuari):
+        # CONNEXIO A BBDD
+        db = pymysql.connect(host='localhost',
+                             user='root',
+                             db='gimnas2',
+                             charset='utf8mb4',
+                             autocommit=True,
+                             cursorclass=pymysql.cursors.DictCursor)
+        cursor = db.cursor()
+        sql = "DELETE FROM clients WHERE idclient="+idusuari+";"
+        cursor.execute(sql)
         db.close()

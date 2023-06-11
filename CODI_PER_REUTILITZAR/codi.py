@@ -58,6 +58,18 @@ print(type(avuiObj))
 print(avuiObj)
 print(dillunsObj)
 print(divendresObj)
+###
+print("*** WEEKDAY() ***")
+dataSTR = "09/06/2023"
+print(dataSTR)
+dataOBJ = datetime.datetime.strptime(dataSTR, '%d/%m/%Y')
+print(type(dataOBJ))
+print(dataOBJ)
+print(dataOBJ.weekday())
+print("OBTENIM DATA DILLUNS A PARTIR DE LA DATA ANTERIOR")
+dillunsOBJ = dataOBJ-datetime.timedelta(days=dataOBJ.weekday())
+print(dillunsOBJ)
+print(dillunsOBJ.weekday())
 
 print()
 print("***************************************")
