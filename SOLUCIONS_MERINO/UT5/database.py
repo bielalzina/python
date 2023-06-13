@@ -222,3 +222,84 @@ class gimnas(object):
         ResQuery = self.cursor.fetchall()
 
         return ResQuery
+
+    def esborraReservaUsuari(self, idusuari, campJSON):
+        print(idusuari)
+        print(type(idusuari))
+        print(campJSON['data'])
+        print(type(campJSON['data']))
+        print(campJSON['idpista'])
+        print(type(campJSON['idpista']))
+
+        # Només podem eliminar reserves futures
+        # Obtenim data actual
+        dataHoraActual = datetime.datetime.now()
+        print(dataHoraActual)
+        print(type(dataHoraActual))
+
+        # Passam data STRING a objecte
+        dataHoraOBJ = datetime.datetime.strptime(
+            campJSON['data'], '%Y-%m-%d %H:%M:%S')
+        print(dataHoraOBJ)
+        print(type(dataHoraOBJ))
+        if (dataHoraActual >= dataHoraOBJ):
+            return ("LES RESERVES PASSADES NO ES PODEN ELIMINAR")
+
+        print(len(campJSON['data']))
+        dataSTR = campJSON['data'][:14]
+        dataSTR = dataSTR+"00:00"
+
+        # ELIMINAM RESERVA
+        sql = "DELETE FROM reserves WHERE data='"+dataSTR+"' "
+        sql = sql + "AND idpista="+str(campJSON['idpista'])+" "
+        sql = sql + "AND idclient="+str(idusuari)+";"
+        print(sql)
+        self.cursor.execute(sql)
+        # retornam llista de reserves d'aquest usuari
+
+        llistaReservesUusari = self.tornaReservesUsuari(idusuari)
+        return llistaReservesUusari
+
+        """ 
+        # separam data i hora
+        dataHora = campJSON['data'].split(sep=" ")
+        print(dataHora[0])
+        print(dataHora[1])
+
+        # Comprovem DATA
+        dataOBJ = datetime.datetime.strptime(dataHora[0], '%Y-%m-%d')
+        # print(dataOBJ.weekday())
+        if (dataOBJ.weekday() > 4):
+            return ("DATA INCORRECTA")
+        # Comprovem DATA
+        hora = dataHora[1].split(":")
+        print(hora[0])
+        print(type(hora[0]))
+        if (int(hora[0]) < 15 or int(hora[0]) > 20):
+            return ("HORA INCORRECTA")
+
+        # Comprovam disponibilitat
+        data = dataHora[0]+" "+hora[0]+":00:00"
+        print(data)
+        print(type(data))
+        dataHoraOBJ = datetime.datetime.strptime(data, '%Y-%m-%d %H:%M:%S')
+        print(dataHoraOBJ)
+        print(type(dataHoraOBJ))
+
+        llistaReserves = self.tornaReserves()
+        # print(llistaReserves)
+
+        for reserva in llistaReserves:
+            if (reserva['data'] == dataHoraOBJ and reserva['idpista'] == campJSON['idpista']):
+                return ("PISTA OCUAPADA, PROVA UNA ALTRA OPCIÓ")
+
+        # INSERIM RESERVA
+        sql = "INSERT INTO reserves (data,idpista,idclient) "
+        sql = sql + "VALUES ('"+data+"', " + \
+            str(campJSON['idpista'])+", "+str(idusuari)+");"
+        self.cursor.execute(sql)
+        # retornam llista de reserves d'aquest usuari
+
+        llistaReservesUusari = self.tornaReservesUsuari(idusuari)
+        return llistaReservesUusari
+        """

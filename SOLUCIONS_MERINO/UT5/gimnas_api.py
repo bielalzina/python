@@ -71,6 +71,12 @@ class reservesUsuari(Resource):
         mt.desconnecta()
         return resultat
 
+    def delete(self, idusuari):
+        mt.connecta()
+        resultat = mt.esborraReservaUsuari(idusuari, request.json)
+        mt.desconnecta()
+        return resultat
+
 
 # GET (tots els usuaris) i POST (afegeix 1 usuari)
 api.add_resource(usuaris, '/gimnas/usuaris')
