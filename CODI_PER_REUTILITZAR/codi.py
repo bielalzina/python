@@ -17,8 +17,15 @@ def datetimeToStrYMD(data):
 # DATA STR A OBJECTE DATETIME ("%d-%m-%Y")
 
 
-def strToDatetime(data):
+def strToDatetimeDMY(data):
     dataObj = datetime.datetime.strptime(data, '%d-%m-%Y')
+    return dataObj
+
+# DATA STR A OBJECTE DATETIME ("%Y-%m-%d")
+
+
+def strToDatetimeYMD(data):
+    dataObj = datetime.datetime.strptime(data, '%Y-%m-%D')
     return dataObj
 
 # DATES
@@ -51,9 +58,9 @@ print(dillunsStrYMD)
 print(divendresStrYMD)
 ###
 print("*** DATETIME ***")
-avuiObj = strToDatetime(avuiStrDMY)
-dillunsObj = strToDatetime(dillunsStrDMY)
-divendresObj = strToDatetime(divendresStrDMY)
+avuiObj = strToDatetimeDMY(avuiStrDMY)
+dillunsObj = strToDatetimeDMY(dillunsStrDMY)
+divendresObj = strToDatetimeDMY(divendresStrDMY)
 print(type(avuiObj))
 print(avuiObj)
 print(dillunsObj)
