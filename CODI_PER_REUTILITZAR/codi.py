@@ -1,5 +1,6 @@
 import datetime
 
+""""
 # DATETIME TO STR ("%d-%m-%Y")
 
 
@@ -25,7 +26,7 @@ def strToDatetimeDMY(data):
 
 
 def strToDatetimeYMD(data):
-    dataObj = datetime.datetime.strptime(data, '%Y-%m-%D')
+    dataObj = datetime.datetime.strptime(data, '%Y-%m-%d')
     return dataObj
 
 # DATES
@@ -147,3 +148,19 @@ for registre in range(0, 5):
     vector.append(registreTemp)
 
 print(vector)
+"""
+
+# VARIABLES PER URL
+# destino.php?variable1=valor1&variable2=valor2
+
+data = "2022-05-25"
+dataSql = data+" 00:00:00"
+print(dataSql)
+print(type(dataSql))
+dataObj = datetime.datetime.strptime(dataSql, '%Y-%m-%d %H:%M:%S')
+print(dataObj)
+dataObjDema=dataObj+datetime.timedelta(days=1)
+print(dataObjDema)
+dataSqlDema=dataObjDema.strftime("%Y-%m-%d %H:%M:%S")
+print(dataSqlDema)
+print(type(dataSqlDema))
