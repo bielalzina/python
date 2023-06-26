@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <script src="https://cdn.tailwindcss.com"></script>
+    </head>
+    <body>
+        <h1 class="text-3xl font-bold">
+            Desenvolupament web en entorn servidor - Maig 2023
+        </h1>
+        <div class="flex font-sans">
+            <div class="flex-none w-48 relative">
+                <img
+                    src="../static/pauairlines.png"
+                    alt=""
+                    class="absolute inset-0 w-full h-full object-cover"
+                />
+            </div>
+            <form class="flex-auto p-6">
+                <div class="flex flex-wrap">
+                    <h1 class="flex-auto text-lg font-semibold text-slate-900">
+                        <select
+                            id="selectorAeroport"
+                            class="block appearance-none bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
+                            value="PMI"
+                        >
+                            <option value="PMI">PMI - Palma, ESPAÑA</option>
+                            <option value="AMS">
+                                AMS - Amsterdam, HOLANDA
+                            </option>
+                            <option value="BCN">BCN - Barcelona, ESPAÑA</option>
+                            <option value="BIO">BIO - Bilbao, ESPAÑA</option>
+                        </select>
+                    </h1>
+                </div>
+                <div
+                    class="flex items-baseline mt-4 mb-6 pb-6 border-b border-slate-200"
+                >
+                    <div class="space-x-2 flex text-sm">
+                        <label>
+                            <input
+                                class="sr-only peer"
+                                name="size"
+                                type="radio"
+                                value="xs"
+                                checked
+                            />
+                            <div
+                                class="w-24 h-9 rounded-lg flex items-center justify-center text-slate-700 peer-checked:font-semibold peer-checked:bg-slate-900 peer-checked:text-white"
+                            >
+                                Arribades
+                            </div>
+                        </label>
+                        <label>
+                            <input
+                                class="sr-only peer"
+                                name="size"
+                                type="radio"
+                                value="s"
+                            />
+                            <div
+                                class="w-24 h-9 rounded-lg flex items-center justify-center text-slate-700 peer-checked:font-semibold peer-checked:bg-slate-900 peer-checked:text-white"
+                            >
+                                Sortides
+                            </div>
+                        </label>
+                    </div>
+                </div>
+                <h3 class="text-2xl font-extrabold dark:text-white">
+                    Vols Nacionals
+                </h3>
+                <div class="flex space-x-4 mb-18 text-sm font-medium">
+                    <div class="flex-auto flex space-x-4">
+                        <table class="table-auto">
+                            <thead>
+                                <tr>
+                                    <th class="px-6 py-3">Flight</th>
+                                    <th class="px-6 py-3">Departure</th>
+                                    <th class="px-6 py-3">Arrival</th>
+                                    <th class="px-6 py-3">Departure Time</th>
+                                    <th class="px-6 py-3">Arrival Time</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="px-6 py-4">JK623</td>
+                                    <td class="px-6 py-4">BCN</td>
+                                    <td class="px-6 py-4">PMI</td>
+                                    <td class="px-6 py-4">2022-05-01 17:00</td>
+                                    <td class="px-6 py-4">2022-05-01 17:30</td>
+                                    <td class="px-6 py-4 text-right">
+                                        <a
+                                            href="#"
+                                            class="font-medium text-red-600 dark:text-red-500 hover:underline"
+                                            >Cancelar</a
+                                        >
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <h3 class="text-2xl font-extrabold dark:text-white">
+                    Vols Internacionals
+                </h3>
+                <div class="flex space-x-4 mb-18 text-sm font-medium">
+                    <div class="flex-auto flex space-x-4">
+                        <table class="table-auto">
+                            <thead>
+                                <tr>
+                                    <th class="px-6 py-3">Flight</th>
+                                    <th class="px-6 py-3">Departure</th>
+                                    <th class="px-6 py-3">Arrival</th>
+                                    <th class="px-6 py-3">Departure Time</th>
+                                    <th class="px-6 py-3">Arrival Time</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="px-6 py-4">UX333</td>
+                                    <td class="px-6 py-4">LIS</td>
+                                    <td class="px-6 py-4">PMI</td>
+                                    <td class="px-6 py-4">2022-05-03 19:20</td>
+                                    <td class="px-6 py-4">2022-05-03 20:35</td>
+                                    <td class="px-6 py-4 text-right">
+                                        <a
+                                            href="#"
+                                            class="font-medium text-red-600 dark:text-red-500 hover:underline"
+                                            >Cancelar</a
+                                        >
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td class="px-6 py-4">JK987</td>
+                                    <td class="px-6 py-4">ORY</td>
+                                    <td class="px-6 py-4">PMI</td>
+                                    <td class="px-6 py-4">2022-05-05 13:00</td>
+                                    <td class="px-6 py-4">2022-05-05 14:15</td>
+                                    <td class="px-6 py-4 text-right">
+                                        <a
+                                            href="#"
+                                            class="font-medium text-red-600 dark:text-red-500 hover:underline"
+                                            >Cancelar</a
+                                        >
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td class="px-6 py-4">JK789</td>
+                                    <td class="px-6 py-4">VRN</td>
+                                    <td class="px-6 py-4">PMI</td>
+                                    <td class="px-6 py-4">2022-05-09 12:00</td>
+                                    <td class="px-6 py-4">2022-05-09 14:05</td>
+                                    <td class="px-6 py-4 text-right">
+                                        <a
+                                            href="#"
+                                            class="font-medium text-red-600 dark:text-red-500 hover:underline"
+                                            >Cancelar</a
+                                        >
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td class="px-6 py-4">JK389</td>
+                                    <td class="px-6 py-4">VRN</td>
+                                    <td class="px-6 py-4">PMI</td>
+                                    <td class="px-6 py-4">2022-05-09 12:50</td>
+                                    <td class="px-6 py-4">2022-05-09 14:55</td>
+                                    <td class="px-6 py-4 text-right">
+                                        <a
+                                            href="#"
+                                            class="font-medium text-red-600 dark:text-red-500 hover:underline"
+                                            >Cancelar</a
+                                        >
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </body>
+</html>
